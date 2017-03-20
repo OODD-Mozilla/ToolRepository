@@ -60,7 +60,7 @@ function fillUrlArray(body) {
 
 function tryingToClone(i){
 	nodeGit.Clone(urls[i], mypath + "/" + folderName[i], {}).then(function(repo){
-	 console.log("cloned " + path.basename(urls[i]) + " to " + repo.workdir());
+	 console.log("\nCloned " + path.basename(urls[i]) + " to " + repo.workdir());
  }).catch(function(err){
 	 	console.log(err);
 	 });
@@ -79,6 +79,7 @@ getOrgRepos(organization, function(urls) {
 	if(fsExistsSync(mypath)) {
 		execSync("rm -r ./tmp");
 	}
+
 	for(var i = 0; i < urls.length ; i++){
 			tryingToClone(i);
 
