@@ -9,13 +9,13 @@ var mypath = slash(__dirname);
 mypath += "/tmp"
 
 /** fill your credentials in for now **/
-var token = "token " + "";
-var userId = "Nikhila-B"; // github user
+var token = "token " + process.env.GITHUB_KEY;
+var userId = ""; // github user
 
 
 // NCSU Enterprise endpoint: https://github.ncsu.edu/api/v3
 var urlRoot = "https://api.github.com";
-var organization = "OODD-Mozilla";
+var organization = "OODD-Mozilla"; // name of the desired organization
 var urls = [];
 var folderName =[];
 
