@@ -39,9 +39,9 @@ npm install
 ### Testing
 
 ### Design Patterns
-Design patterns are not applicable as our task involved just implementing a method. However, the [Project Description](#project description) section below provides details of the steps as why it was implemented, the way it was implemented.
+Design patterns are not applicable as our task involved is just implementing a way to get all the contributors in a git repository. However, the [Project Description](https://github.com/OODD-Mozilla/ToolRepository/blob/master/Wiki.md#project-description) section below provides details of the steps as the way it was implemented.
 ### Conclusion
-
+After understanding the GitHub API and the way Json object can be used to access and post the data of the new contributors in repository we have observed it can be automated and the steps to understand it are as shown in the article.
 ### References
  1.[https://en.wikipedia.org/wiki/Servo_(layout_engine)](https://en.wikipedia.org/wiki/Servo_(layout_engine))  
  2.[https://github.com/servo/servo/wiki/Report-new-contributors-project](https://github.com/servo/servo/wiki/Report-new-contributors-project)
