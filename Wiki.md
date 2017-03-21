@@ -3,7 +3,7 @@
 ## M1705 - Automatically report new contributors to all git repositories
 
 ### Introduction
- [1](https://en.wikipedia.org/wiki/Servo_(layout_engine))Servo is a browser layout engine developed by [Mozilla](http        yuyus://en.wikipedia.org/wiki/Mozilla). It is at it's early stage but can easily supply i.e. cntribute to Wikipedia and [Github](https://en.wikipedia.org/wiki/GitHub) successfully passes the [Acid2](https://en.wikipedia.org/wiki/Acid2) test. it aims to create parallel environment with different components which can be handled by small separate tasks.
+ [1](https://en.wikipedia.org/wiki/Servo_(layout_engine))Servo is a browser layout engine developed by [Mozilla](https://en.wikipedia.org/wiki/Mozilla). It is at it's early stage but can easily supply i.e. cntribute to Wikipedia and [Github](https://en.wikipedia.org/wiki/GitHub) successfully passes the [Acid2](https://en.wikipedia.org/wiki/Acid2) test. it aims to create parallel environment with different components which can be handled by small separate tasks.
 
 ### Scope
 The scope of the project was to complete the initial steps mentioned [here](https://github.com/servo/servo/wiki/Report-new-contributors-project)  
@@ -34,10 +34,7 @@ The project requirement states the initail state to be able to track information
 git clone https://github.com/OODD-Mozilla/ToolRepository.git
 cd ToolRepository
 npm install  
-~~~~
-
-### Testing
-
+~~~~  
 ### Design Patterns
 Design patterns are not applicable as our task involved is just implementing a way to get all the contributors in a git repository. However, the [Project Description](https://github.com/OODD-Mozilla/ToolRepository/blob/master/Wiki.md#project-description) section below provides details of the steps as the way it was implemented.
 ### Conclusion
