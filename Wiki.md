@@ -14,13 +14,13 @@ The steps are as follows:
 
 ### Project Description
 The project requirement states the initail state to be able to track information across all repositories in the servo organization. The goal of this work is to build a system that uses the Github API to determine this information on a regular basis.We have did this in the following ways :  
-#### Tool ### 1: JSON author file
+#### Tool # 1: JSON author file
 * create a tool that initializes a JSON file with the known authors for a local git repository
 * First, it fetches the author name from all the commits in a repository
 * Then, adds it to set. Here we use set to avoid the duplication of authors if he/she have done more than 1 commits.
 * Saves the set in a Json file.
 
-#### Tool ### 2: Clone repositories Tool 
+#### Tool # 2: Clone repositories Tool 
 * [Issue #4](../../issues/4)
 * create a tool that clones every git repository in a given github organization (use the github API to retrieve this information)
 * `package.json` has the dependencies needed to run both the tools.
