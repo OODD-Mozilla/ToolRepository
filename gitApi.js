@@ -9,11 +9,11 @@ var mypath = slash(__dirname);
 mypath += "/tmp"
 
 /** fill your credentials in for now **/
-var token = "token " + "";
-var userId = "Nikhila-B"; // github user
+var token = "token " + process.env.GITHUB_KEY;
+var userId = ""; // github user
 
 var urlRoot = "https://api.github.com";
-var organization = "OODD-Mozilla";
+var organization = "OODD-Mozilla"; // name of the desired organization
 var urls = [];
 var folderName =[];
 
@@ -61,7 +61,7 @@ function fillUrlArray(body) {
 //clones repo to local directory
 function tryingToClone(i){
 	nodeGit.Clone(urls[i], mypath + "/" + folderName[i], {}).then(function(repo){
-	 console.log("cloned " + path.basename(urls[i]) + " to " + repo.workdir());
+	 console.log("\nCloned " + path.basename(urls[i]) + " to " + repo.workdir());
  }).catch(function(err){
 	 	console.log(err);
 	 });
@@ -82,6 +82,7 @@ getOrgRepos(organization, function(urls) {
 	if(fsExistsSync(mypath)) {
 		execSync("rm -r ./tmp");
 	}
+
 	for(var i = 0; i < urls.length ; i++){
 			tryingToClone(i);
 
