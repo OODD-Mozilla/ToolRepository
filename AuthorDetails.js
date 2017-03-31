@@ -11,8 +11,10 @@ var urlRoot = "https://api.github.com";
 
 getAuthors(userId);
 
+//fetches author from specified repo
 function getAuthors(userName) {
 
+    //to be used while making http call
     var options = {
         url: urlRoot + '/repos/OODD-Mozilla/ToolRepository/commits',
         method: 'GET',
@@ -23,6 +25,7 @@ function getAuthors(userName) {
         }
     };
 
+    //make http call using request library
     request(options, function (error, response, body) {
         var obj = JSON.parse(body);
         var mySet = new Set();
@@ -35,13 +38,15 @@ function getAuthors(userName) {
         console.log("\n\nTOSTRING: \n", mySet.toString());
 
         jsonfile.writeFileSync(file, mySet, {spaces: 2});
-        var objRead = jsonfile.readFileSync(file);
+
+        //code for manual testing
+        /*var objRead = jsonfile.readFileSync(file);
         console.log("\n\nREAD:\n", objRead);
         var setRead = new Set(objRead.set);
         console.log("\nChecks: ");
         console.log(setRead.has('shashankjha.np@gmail.com'));
         console.log(setRead.contains('nikhi.bala12@gmail.com'));
-        console.log(setRead.has('harshal@gmail.com'));
+        console.log(setRead.has('harshal@gmail.com'));*/
 
     });
 

@@ -12,8 +12,6 @@ mypath += "/tmp"
 var token = "token " + "";
 var userId = "Nikhila-B"; // github user
 
-
-// NCSU Enterprise endpoint: https://github.ncsu.edu/api/v3
 var urlRoot = "https://api.github.com";
 var organization = "OODD-Mozilla";
 var urls = [];
@@ -22,7 +20,8 @@ var folderName =[];
 
 function getOrgRepos(org, callback) {
 
-	var options = {
+    //to be used while making http call
+    var options = {
 
 		url: urlRoot + '/orgs/' + org + '/repos',
 		method: 'GET',
@@ -33,7 +32,8 @@ function getOrgRepos(org, callback) {
 		}
 	};
 
-	request(options, function(error, response, body) {
+    //make http call using request library
+    request(options, function(error, response, body) {
 		if (error) {
 			console.log("Error in getting all repos ", error);
 		} else {
@@ -45,7 +45,7 @@ function getOrgRepos(org, callback) {
 
 }
 
-
+//adds url of all the repos found in given organization to an array
 function fillUrlArray(body) {
 	var obj = JSON.parse(body);
 	for (var i = 0; i < obj.length; i++) {
@@ -58,6 +58,7 @@ function fillUrlArray(body) {
 }
 
 
+//clones repo to local directory
 function tryingToClone(i){
 	nodeGit.Clone(urls[i], mypath + "/" + folderName[i], {}).then(function(repo){
 	 console.log("cloned " + path.basename(urls[i]) + " to " + repo.workdir());
@@ -66,6 +67,7 @@ function tryingToClone(i){
 	 });
 }
 
+//checks if repo already exists locally
 function fsExistsSync(myDir) {
   try {
     fs.accessSync(myDir);
@@ -75,6 +77,7 @@ function fsExistsSync(myDir) {
   }
 }
 
+//clone repos using url array
 getOrgRepos(organization, function(urls) {
 	if(fsExistsSync(mypath)) {
 		execSync("rm -r ./tmp");
