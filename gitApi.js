@@ -15,13 +15,15 @@ var userId = ""; // github user
 var urlRoot = "https://api.github.com";
 var organization = "OODD-Mozilla"; // name of the desired organization
 var urls = [];
-var folderName =[];
+var folderName = [];
+
+var repoNums;
 
 
 function getOrgRepos(org, callback) {
 
-    //to be used while making http call
-    var options = {
+	//to be used while making http call
+	var options = {
 
 		url: urlRoot + '/orgs/' + org + '/repos',
 		method: 'GET',
@@ -32,8 +34,8 @@ function getOrgRepos(org, callback) {
 		}
 	};
 
-    //make http call using request library
-    request(options, function(error, response, body) {
+	//make http call using request library
+	request(options, function(error, response, body) {
 		if (error) {
 			console.log("Error in getting all repos ", error);
 		} else {
@@ -59,32 +61,92 @@ function fillUrlArray(body) {
 
 
 //clones repo to local directory
-function tryingToClone(i){
-	nodeGit.Clone(urls[i], mypath + "/" + folderName[i], {}).then(function(repo){
-	 console.log("\nCloned " + path.basename(urls[i]) + " to " + repo.workdir());
- }).catch(function(err){
-	 	console.log(err);
-	 });
+function tryingToClone(i) {
+	nodeGit.Clone(urls[i], mypath + "/" + folderName[i], {}).then(function(repo) {
+		//console.log("\nCloned " + path.basename(urls[i]) + " to " + repo.workdir());
+	}).catch(function(err) {
+		//console.log(err);
+	});
 }
 
 //checks if repo already exists locally
 function fsExistsSync(myDir) {
-  try {
-    fs.accessSync(myDir);
-    return true;
-  } catch (e) {
-    return false;
-  }
+	try {
+		fs.accessSync(myDir);
+		return true;
+	} catch (e) {
+		return false;
+	}
 }
 
-//clone repos using url array
-getOrgRepos(organization, function(urls) {
-	if(fsExistsSync(mypath)) {
-		execSync("rm -r ./tmp");
-	}
+//clone repos using url array - Call the function here
 
-	for(var i = 0; i < urls.length ; i++){
+
+
+
+/**
+* Adding test case 1 - correct arguments
+* clone all 6 repos in the organization
+* returns 1 to indicate success 
+*/
+function testClone(callback) {
+	getOrgRepos(organization, function(urls) {
+
+		if (fsExistsSync(mypath)) {
+			execSync("rm -r ./tmp");
+		}
+
+		for (var i = 0; i < urls.length; i++) {
 			tryingToClone(i);
 
-	}
-});
+		}
+		callback();
+	});
+
+}
+
+function SuccessMessage() {
+	console.log("Successfully cloned " + urls.length + " repos");
+	return true;
+}
+
+/**
+* Adding test case 2 - incorrect argument  [ wrong organization name]
+* clone all 6 repos in the organization
+* returns -1 to indicate failure
+*/
+function testWrongOrg(callback) {
+	var fakeOrgName = 'DNE';
+	getOrgRepos( fakeOrgName, function(urls) {
+
+		if (fsExistsSync(mypath)) {
+			execSync("rm -r ./tmp");
+		}
+
+		for (var i = 0; i < urls.length; i++) {
+			tryingToClone(i);
+
+		}
+		callback(fakeOrgName);
+	});
+
+}
+
+function FailMessage(content) {
+	console.log(" Sorry no repos were cloned from " + content + " organization");
+	return false;
+}
+
+
+//testClone(SuccessMessage);
+//testWrongOrg(FailMessage);
+
+function testCase1(){
+	testClone(SuccessMessage);
+}
+function testCase2() {
+	testWrongOrg(FailMessage);
+}
+
+module.exports.testCase1 = testCase1;
+module.exports.testCase2 = testCase2;

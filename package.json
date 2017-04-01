@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=0.12.0"
   },
+  "scripts": {
+  	"test": "test"
+  },
   "dependencies": {
     "request": "^2.67.0",
     "bluebird": "^3.2.2",
@@ -13,6 +16,7 @@
     "nodegit": "latest",
     "path": "latest",
     "slash": "latest",
-    "fs": "latest"
+    "fs": "latest",
+    "mocha": "0.3.x"
   }
 }
