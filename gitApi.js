@@ -87,7 +87,7 @@ function fsExistsSync(myDir) {
 /**
 * Adding test case 1 - correct arguments
 * clone all 6 repos in the organization
-* returns 1 to indicate success 
+* returns true to indicate success 
 */
 function testClone(callback) {
 	getOrgRepos(organization, function(urls) {
@@ -106,14 +106,14 @@ function testClone(callback) {
 }
 
 function SuccessMessage() {
-	console.log("Successfully cloned " + urls.length + " repos");
+	console.log("Test Case 1:\nSuccessfully cloned " + urls.length + " repos");
 	return true;
 }
 
 /**
 * Adding test case 2 - incorrect argument  [ wrong organization name]
 * clone all 6 repos in the organization
-* returns -1 to indicate failure
+* returns false to indicate failure
 */
 function testWrongOrg(callback) {
 	var fakeOrgName = 'DNE';
@@ -133,13 +133,10 @@ function testWrongOrg(callback) {
 }
 
 function FailMessage(content) {
-	console.log(" Sorry no repos were cloned from " + content + " organization");
+	console.log("Test Case 2:\nSorry no repos were cloned from " + content + " organization");
 	return false;
 }
 
-
-//testClone(SuccessMessage);
-//testWrongOrg(FailMessage);
 
 function testCase1(){
 	testClone(SuccessMessage);
@@ -148,5 +145,9 @@ function testCase2() {
 	testWrongOrg(FailMessage);
 }
 
-module.exports.testCase1 = testCase1;
-module.exports.testCase2 = testCase2;
+
+testCase1();
+testCase2();
+//When using MOCHA & CHAI
+//module.exports.testCase1 = testCase1;
+//module.exports.testCase2 = testCase2;
