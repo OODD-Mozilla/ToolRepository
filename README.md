@@ -31,3 +31,10 @@ npm install
 node gitApi.js
 ~~~~
 
+
+| Test ID      | Description                                                                                                                                                                                                                                                               | Expected                                                      | Actual                                                        | Pass/Fail |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|-----------|
+| testClone    | (1) The getRepos method with the OODD-Mozilla as the organization name (2) The call to this method with that argument leads to 6 repos to be cloned (3) The repos are created in /tmp folder (4) run node gitApi.js command  Currently - testCase1() method in gitApi.js  | << on console>> Test Case 1: Successfully clone 6 repos       | << on console>> Test Case 1: Successfully clone 6 repos       | pass      |
+| testWrongOrg | (1) The getRepos method with the DNE as the organization name (2) The call to this method with cause a response with error from GITHUB API (3) run node gitApi.js command  Currently - testCase2() method in gitApi.js                                                    | Test Case 2: Sorry no repos were cloned from DNE organization | Test Case 2: Sorry no repos were cloned from DNE organization | pass      |
+|              |                                                                                                                                                                                                                                                                           |                                                               |                                                               |           |
+
