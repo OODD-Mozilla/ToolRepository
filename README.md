@@ -26,6 +26,8 @@ npm install
 * To generate a github api token: https://github.com/blog/1509-personal-api-tokens
 * To add it as an environment variable: https://nycda.com/blog/using-environment-variables-to-safely-store-api-credentials
 
+### RUN TEST CASES ####
+For testing gitApi.js - first fix the lines below before executing the command
 *Fix lines 12, 13, 18 as mentioned above before trying to run it.*
 ~~~~
 node gitApi.js
