@@ -5,7 +5,8 @@
 #  Node JS # 
 ##############
 node_modules/
-tmp/
+repos/
+authors.json
 
 # Compiled source #
 ###################
