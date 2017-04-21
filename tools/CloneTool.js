@@ -1,7 +1,7 @@
 var nodegit = require('nodegit');
 var fs = require('fs');
 const execSync = require('child_process').execSync;
-var GitUtils = require("../utils/GitUtils");
+var GitHubUtils = require("../utils/GitHubUtils");
 
 /********** PUBLIC ***********/
 // Clones the repos in org to localReposPath
@@ -9,7 +9,7 @@ var GitUtils = require("../utils/GitUtils");
 function cloneRepos(org, token, localReposPath) {
 	cleanRepoFolder(localReposPath);
 	return new Promise(function(resolve, reject){
-		GitUtils.getOrgRepos(org, token, function(repos) {
+		GitHubUtils.getOrgRepos(org, token, function(repos) {
 			var allPromises = [];
 			repos.forEach(function(repo){
 				allPromises.push(cloneRepo(localReposPath, repo.name, repo.clone_url));

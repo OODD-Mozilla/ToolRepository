@@ -7,16 +7,18 @@
     "node": ">=0.12.0"
   },
   "scripts": {
-  	"test": "test"
+    "test": "test"
   },
   "dependencies": {
-    "request": "^2.67.0",
     "bluebird": "^3.2.2",
-    "parse-link-header": "^0.4.1",
-    "nodegit": "latest",
-    "path": "latest",
-    "slash": "latest",
+    "chai": "^3.5.0",
     "fs": "latest",
-    "mocha": "0.3.x"
+    "mocha": "^0.3.6",
+    "nock": "^9.0.13",
+    "nodegit": "latest",
+    "parse-link-header": "^0.4.1",
+    "path": "latest",
+    "request": "^2.67.0",
+    "slash": "latest"
   }
 }
