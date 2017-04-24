@@ -21,17 +21,17 @@ var organization = "OODD-Mozilla";
 
 // Run the tools
 /***** Clone Tool ******/
-var clonePromise = CloneTool.cloneRepos(organization, token, localReposPath);
+var clonePromise = CloneTool.run(organization, token, localReposPath);
 clonePromise.then(function() {
 	console.log("Repositories cloned successfully.");
 
 	/***** Author Tool ******/
-	var authorPromise = AuthorTool.initAuthors(localReposPath);
+	var authorPromise = AuthorTool.run(localReposPath);
 	authorPromise.then(function() {
 		console.log("Local authors initialized successfully.");
 
 		/***** Pull Request Tool ******/
-		var pullRequestPromise = PullRequestTool.addAuthors(localReposPath);
+		var pullRequestPromise = PullRequestTool.run(localReposPath);
 		pullRequestPromise.then(function() {
 			console.log("Pull request authors added successfully.");
 		});

@@ -6,7 +6,7 @@ function addAuthors(org, token, localReposPath) {
 }
 
 module.exports = {
-	addAuthors:addAuthors
+	run:addAuthors
 }
 
 /********** PRIVATE ***********/

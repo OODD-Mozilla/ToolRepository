@@ -20,7 +20,7 @@ function cloneRepos(org, token, localReposPath) {
 }
 
 module.exports = {
-	cloneRepos:cloneRepos
+	run: cloneRepos
 }
 
 /********** PRIVATE ***********/

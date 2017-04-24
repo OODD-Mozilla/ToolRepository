@@ -26,7 +26,7 @@ function initAuthors(pathToRepos) {
 }
 
 module.exports = {
-	initAuthors: initAuthors
+	run: initAuthors
 }
 
 /********** PRIVATE ***********/
