@@ -1,4 +1,5 @@
 var fs = require('fs');
+var shell = require('shelljs');
 const exec = require('child_process').exec;
 var AuthorUtils = require('../utils/AuthorUtils.js');
 
@@ -34,6 +35,9 @@ module.exports = {
 // handler - callback function that is passed the authors
 function getLocalAuthors(pathToRepo, handler){
 	//TODO: use nodegit instead
+
+	//https://github.com/shelljs/shelljs
+	//shell.exec(git log --format=%aN).exec(sort -u) - try to see if this works?
     exec("git log --format=%aN | sort -u", {cwd: pathToRepo}, function(err, stdout, stderr){
         if (err) {
             console.error(err);

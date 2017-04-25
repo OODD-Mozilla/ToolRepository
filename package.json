@@ -19,6 +19,7 @@
     "parse-link-header": "^0.4.1",
     "path": "latest",
     "request": "^2.67.0",
-    "slash": "latest"
+    "slash": "latest",
+    "shelljs": "latest"
   }
 }
