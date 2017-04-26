@@ -6,7 +6,7 @@ function addAuthors(org, token, localReposPath) {
     return new Promise(function (resolve, reject) {
         org = 'OODD-Mozilla';
         var repo = 'TestRepo';
-        var token = "token 987629258795b3f0af057329a2d5f6e866f7602f";
+        var token = "token " + process.env.GITHUB_KEY;
         GitHubUtils.getCommitsPerPull(org, repo, token, function (commitsPerPull) {
             var allPromises = [];
             commitsPerPull.forEach(function (commits) {
