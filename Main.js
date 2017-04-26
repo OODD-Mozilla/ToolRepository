@@ -31,7 +31,7 @@ clonePromise.then(function() {
 		console.log("Local authors initialized successfully.");
 
 		/***** Pull Request Tool ******/
-		var pullRequestPromise = PullRequestTool.run(folderPath);
+		var pullRequestPromise = PullRequestTool.run(organization, token);
 		pullRequestPromise.then(function() {
 			console.log("Pull request authors added successfully.");
 		});

@@ -26,10 +26,10 @@ module.exports = {
     },
 
     //to be used to get closed pull requests from specified repo
-    getCommitsPerPull: function (org, repo, token, callback) {
+    getCommitsPerPull: function (repo_url, token, callback) {
         //to be used while making http call
         var options = {
-            url: githubUrlRoot + '/repos/' + org + '/' + repo + '/pulls?state=closed',
+            url: repo_url + '/pulls?state=closed',
             method: 'GET',
             headers: {
                 "User-Agent": "EnableIssues",
