@@ -6,8 +6,9 @@ var GitHubUtils = require("../utils/GitHubUtils");
 /********** PUBLIC ***********/
 // Clones the repos in org to localReposPath
 // Returns a promise that all repositories have been cloned successfully
-function cloneRepos(org, token, localReposPath) {
-	cleanRepoFolder(localReposPath);
+function cloneRepos(org, token, folderPath) {
+	cleanRepoFolder(folderPath);
+	var localReposPath = folderPath + "/repos";
 	return new Promise(function(resolve, reject){
 		GitHubUtils.getOrgRepos(org, token, function(repos) {
 			var allPromises = [];
