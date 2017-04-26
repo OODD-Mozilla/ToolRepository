@@ -7,7 +7,7 @@ var slash = require('slash')
 var slash = require('slash');
 var AuthorUtils = require('../utils/AuthorUtils.js');
 
->>>>>>> 8d70e08084b54fdac2fa7987468ff11bee8e0bfd
+
 // Setup
 var mypath = slash(__dirname);
 if(process.env.GITHUB_KEY == undefined) { //Make sure token is set
