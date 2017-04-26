@@ -1,5 +1,5 @@
 var nodegit = require('nodegit');
-var fs = require('fs');
+var fs = require('fs-extra');
 const execSync = require('child_process').execSync;
 var GitHubUtils = require("../utils/GitHubUtils");
 
@@ -42,7 +42,8 @@ function cleanRepoFolder(localReposPath) {
 	try {
 		fs.accessSync(localReposPath);
 		try {
-			execSync("rm -r '" + localReposPath + "'");
+			//execSync("rm -r '" + localReposPath + "'");
+			fs.removeSync(localReposPath) // check if path needs singlequotes
 		} catch (e) {
 			console.log("Problem removing repo folder. " + e);
 		}
