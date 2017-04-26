@@ -3,6 +3,7 @@ var githubUrlRoot = "https://api.github.com";
 
 module.exports = {
 
+    //Returns the list of repos for particular org
     getOrgRepos: function (org, token, callback) {
         //to be used while making http call
         var options = {
@@ -25,11 +26,11 @@ module.exports = {
         });
     },
 
-    //to be used to get closed pull requests from specified repo
-    getCommitsPerPull: function (org, repo, token, callback) {
+    //to be used to all the closed pull requests' URL from specified repo
+    getCommitsUrlFromAllPulls: function (repoUrl, token, callback) {
         //to be used while making http call
         var options = {
-            url: githubUrlRoot + '/repos/' + org + '/' + repo + '/pulls?state=closed',
+            url: repoUrl + '/pulls?state=closed',
             method: 'GET',
             headers: {
                 "User-Agent": "EnableIssues",
@@ -44,12 +45,12 @@ module.exports = {
                 console.log("Error in getting all pull requests ", error);
             } else {
                 var obj = JSON.parse(body);
-                var commitsPerPush = [];
+                var commitsUrlList = [];
                 for (var i = 0; i < obj.length; i++) {
-                    commitsPerPush.push(obj[i].commits_url);
+                    commitsUrlList.push(obj[i].commits_url);
                 }
-                callback(commitsPerPush);
+                callback(commitsUrlList);
             }
         });
     }
-}
+};

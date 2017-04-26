@@ -2,31 +2,33 @@ var GitHubUtils = require('../utils/GitHubUtils');
 var request = require('request');
 
 /********** PUBLIC ***********/
-function addAuthors(org, token, localReposPath) {
+function addAuthors(org, token) {
     return new Promise(function (resolve, reject) {
-        org = 'OODD-Mozilla';
-        var repo = 'TestRepo';
-        var token = "token " + process.env.GITHUB_KEY;
-        GitHubUtils.getCommitsPerPull(org, repo, token, function (commitsPerPull) {
-            var allPromises = [];
-            commitsPerPull.forEach(function (commits) {
-                console.log(commits);
-                allPromises.push(getAuthors(commits, token));
+        GitHubUtils.getOrgRepos(org, token, function (repos) {
+            //console.log("Repos count: "+ repos.length);
+            repos.forEach(function (repo) {
+                //console.log("Repo URL: "+ repo.url);
+                GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, function (commitsUrls) {
+                    var allPromises = [];
+                    commitsUrls.forEach(function (pullCommitsUrl) {
+                        //console.log(pullCommitsUrl);
+                        allPromises.push(getAuthorsFromCommits(pullCommitsUrl, token));
+                    });
+                    Promise.all(allPromises).then(resolve).catch(reject);
+                });
             });
-            Promise.all(allPromises).then(resolve).catch(reject);
         });
     });
 }
-
 module.exports = {
     run: addAuthors
 };
 
 /********** PRIVATE ***********/
-
-function getAuthors(commit, token) {
+//Fetches author from specified pull requests
+function getAuthorsFromCommits(pullCommitsUrl, token) {
     var options = {
-        url: commit,
+        url: pullCommitsUrl,
         method: 'GET',
         headers: {
             "User-Agent": "EnableIssues",
@@ -42,10 +44,12 @@ function getAuthors(commit, token) {
         } else {
             var obj = JSON.parse(body);
             for (var i = 0; i < obj.length; i++) {
+                //It is displaying the author's email for now
+                //Need to change it later
                 console.log(obj[i].commit.author.email);
             }
         }
     });
 }
 
-addAuthors('')
+addAuthors('OODD-Mozilla', "token " + process.env.GITHUB_KEY);
