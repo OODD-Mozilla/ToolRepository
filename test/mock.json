@@ -185,11 +185,10 @@
 			"push": false,
 			"pull": true
 		}
-	}]
-}
+	}],
 
-{
-	"pullRequests": [{
+
+	"getPullRequests": [{
 		"url": "https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls/1",
 		"id": 117370771,
 		"html_url": "https://github.com/OODD-Mozilla/TestRepo/pull/1",
@@ -488,9 +487,7 @@
 			}
 		}
 	}]
-}
-
-{
+,
 	"getCommits":
 
 		[{

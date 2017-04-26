@@ -1,12 +1,9 @@
+// Dependencies
 var chai = require("chai");
 var assert = chai.assert;
 var nock = require("nock");
-<<<<<<< HEAD
-var slash = require('slash')
-=======
 var slash = require('slash');
 var AuthorUtils = require('../utils/AuthorUtils.js');
-
 
 // Setup
 var mypath = slash(__dirname);
@@ -24,7 +21,7 @@ var PullRequestTool = require("../tools/PullRequestTool.js");
 
 // Load mock data
 var data = require("./mock.json");
-var mockingOn = true;
+var mockingOn = false;
 
 describe('testToolSuite', function(){
 
@@ -35,11 +32,11 @@ describe('testToolSuite', function(){
 
 		describe('#run(org, token, localReposPath)', function(){
 
-			/*if(mockingOn) {
+			if(mockingOn) {
 				nock("https://api.github.com")
 				.get("/repos/testuser/Hello-World/issues/0")
 				.reply(200, JSON.stringify(data.issueList[0]) );
-			}*/
+			}
 			
 			it('should handle invalid organization', function(done) {
 				assert.isNull(localReposPath,'Not an organization');
@@ -90,11 +87,11 @@ describe('testToolSuite', function(){
 			});
 
 			//TODO: decouple from clone tool folder
-			it('should find 5 authors in OODD-Mozilla organization', function(done) {
+			it('should find 6 authors in OODD-Mozilla organization', function(done) {
 				return AuthorTool.run(folderPath)
 				.then(function(){
 					var authors = AuthorUtils.getAuthors(folderPath);
-					assert.equal(authors.length, 5, "Authors file has expected number of authors");
+					assert.equal(authors.length, 6, "Authors file has expected number of authors");
 					done();
 				})
 				.catch(function(e) {
@@ -117,11 +114,11 @@ describe('testToolSuite', function(){
 
 		describe('#run(org, token, localReposPath)', function(){
 
-			/*if(mockingOn) {
+			if(mockingOn) {
 				nock("https://api.github.com")
 				.get("/repos/testuser/Hello-World/issues/0")
 				.reply(200, JSON.stringify(data.issueList[0]) );
-			}*/
+			}
 
 			it('should handle invalid organization', function(done) {
 
