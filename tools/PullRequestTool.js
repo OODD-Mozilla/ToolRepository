@@ -4,17 +4,15 @@ var request = require('request');
 /********** PUBLIC ***********/
 function addAuthors(org, token) {
     return new Promise(function (resolve, reject) {
-        org = 'OODD-Mozilla';
-        var token = "token " + process.env.GITHUB_KEY;
         GitHubUtils.getOrgRepos(org, token, function (repos) {
-            console.log("Repos count: "+ repos.length);
+            //console.log("Repos count: "+ repos.length);
             repos.forEach(function (repo) {
-                console.log("Repo URL: "+ repo.url);
-                GitHubUtils.getCommitsPerPull(repo.url, token, function (commitsPerPull) {
+                //console.log("Repo URL: "+ repo.url);
+                GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, function (commitsUrls) {
                     var allPromises = [];
-                    commitsPerPull.forEach(function (commits) {
-                        console.log(commits);
-                        allPromises.push(getAuthorsFromCommits(commits, token));
+                    commitsUrls.forEach(function (pullCommitsUrl) {
+                        //console.log(pullCommitsUrl);
+                        allPromises.push(getAuthorsFromCommits(pullCommitsUrl, token));
                     });
                     Promise.all(allPromises).then(resolve).catch(reject);
                 });
@@ -27,10 +25,10 @@ module.exports = {
 };
 
 /********** PRIVATE ***********/
-
-function getAuthorsFromCommits(commit, token) {
+//Fetches author from specified pull requests
+function getAuthorsFromCommits(pullCommitsUrl, token) {
     var options = {
-        url: commit,
+        url: pullCommitsUrl,
         method: 'GET',
         headers: {
             "User-Agent": "EnableIssues",
@@ -54,4 +52,4 @@ function getAuthorsFromCommits(commit, token) {
     });
 }
 
-addAuthors('');
+addAuthors('OODD-Mozilla', "token " + process.env.GITHUB_KEY);
