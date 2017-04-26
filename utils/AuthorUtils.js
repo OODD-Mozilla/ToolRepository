@@ -1,9 +1,9 @@
 var jsonfile = require('jsonfile');
-var authorsFile = 'authors.json';
+var authorsFile = '/authors.json';
 
-function getAuthors() {
+function getAuthors(folderPath) {
 	try {
-		var authorsFromFile = jsonfile.readFileSync(authorsFile);
+		var authorsFromFile = jsonfile.readFileSync(folderPath + authorsFile);
 		return authorsFromFile;	
 	} catch(e) {
 		if(e.code == "ENOENT") {
@@ -15,8 +15,8 @@ function getAuthors() {
 	}
 }
 
-function saveAuthors(authors) {
-	jsonfile.writeFileSync(authorsFile, authors);
+function saveAuthors(folderPath, authors) {
+	jsonfile.writeFileSync(folderPath + authorsFile, authors);
 }
 
 module.exports = {

@@ -6,11 +6,17 @@ var AuthorUtils = require('../utils/AuthorUtils.js');
 /********** PUBLIC ***********/
 // Initializes authors for all repositories in pathToRepos
 // returns a promise that authors were saved successfully
-function initAuthors(pathToRepos) {
+function initAuthors(folderPath) {
 	return new Promise(function(resolve, reject){
-		var knownAuthors = AuthorUtils.getAuthors();
+		var pathToRepos = folderPath + "/repos";
+		var knownAuthors = AuthorUtils.getAuthors(folderPath);
 		var allPromises = [];
-		getRepoPaths(pathToRepos).forEach(function(path){
+		var repoPaths = getRepoPaths(pathToRepos);
+		if(repoPaths == null) {
+			reject("Invalid repo path.");
+		}
+			
+		repoPaths.forEach(function(path){
 			var p = new Promise(function(resolve, reject){
 				getLocalAuthors(path, function(authors) {
 					knownAuthors = knownAuthors.concat(authors);
@@ -20,7 +26,7 @@ function initAuthors(pathToRepos) {
 			allPromises.push(p);
 		});
 		Promise.all(allPromises).then(function(){
-			AuthorUtils.saveAuthors(uniqueArray(knownAuthors));
+			AuthorUtils.saveAuthors(folderPath, uniqueArray(knownAuthors));
 			resolve();
 		}).catch(reject);
 	});
@@ -59,7 +65,7 @@ function getRepoPaths(pathToRepos) {
 		return repoPaths;
 	} catch(e) {
 		console.log("Unable to read repositories: " + e);
-		process.exit(1);
+		return null;
 	}	
 }
 

@@ -11,7 +11,7 @@ var PullRequestTool = require("./tools/PullRequestTool.js");
 
 // Setup
 var mypath = slash(__dirname);
-var localReposPath = mypath + "/repos";
+var folderPath = mypath + "/toolfolder";
 if(process.env.GITHUB_KEY == undefined) { //Make sure token is set
 	console.log("Please set GITHUB_KEY environment variable to your github token.");
 	process.exit(1);
@@ -21,17 +21,17 @@ var organization = "OODD-Mozilla";
 
 // Run the tools
 /***** Clone Tool ******/
-var clonePromise = CloneTool.run(organization, token, localReposPath);
+var clonePromise = CloneTool.run(organization, token, folderPath);
 clonePromise.then(function() {
 	console.log("Repositories cloned successfully.");
 
 	/***** Author Tool ******/
-	var authorPromise = AuthorTool.run(localReposPath);
+	var authorPromise = AuthorTool.run(folderPath);
 	authorPromise.then(function() {
 		console.log("Local authors initialized successfully.");
 
 		/***** Pull Request Tool ******/
-		var pullRequestPromise = PullRequestTool.run(localReposPath);
+		var pullRequestPromise = PullRequestTool.run(folderPath);
 		pullRequestPromise.then(function() {
 			console.log("Pull request authors added successfully.");
 		});
