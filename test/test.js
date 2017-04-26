@@ -1,7 +1,7 @@
 var chai = require("chai");
 var assert = chai.assert;
 var nock = require("nock");
-
+var slash = require('slash')
 // Setup
 var mypath = slash(__dirname);
 var localReposPath = mypath + "/repos";
@@ -21,12 +21,11 @@ var PullRequestTool = require("../tools/PullRequestTool.js");
 var data = require("./mock.json");
 var mockingOn = true;
 
-
 describe('testToolSuite', function(){
 
-	////////////////////////////////////////
+	///////////////////////////////////////
 	// MOCHA TEST SUITE FOR CloneTool.js
-	////////////////////////////////////////
+	///////////////////////////////////////
 	describe('testCloneTool', function(){
 
 		describe('#run(org, token, localReposPath)', function(){
@@ -38,15 +37,17 @@ describe('testToolSuite', function(){
 			}
 			
 			it('should handle invalid organization', function(done) {
-
+				assert.isNull(localReposPath,'Not an organization');
+				assert.isUndefined(localReposPath,'Invalid Oorganization');
 			});
 
 			it('should handle invalid token', function(done) {
-
+                assert.isNull(token,'Token cannot be null');
+                assert.notEqual(token,process.env.GITHUB_KEY,'Invalid Token');
 			});
 
 			it('should clone 2 repos for OODD-Mozilla', function(done) {
-
+                //assert.
 			});
 
 		});
@@ -78,9 +79,9 @@ describe('testToolSuite', function(){
 
 	});
 
-	////////////////////////////////////////
-	// MOCHA TEST SUITE FOR CloneTool.js
-	////////////////////////////////////////
+	////////////////////////////////////////////
+	// MOCHA TEST SUITE FOR PullRequestTool.js
+	////////////////////////////////////////////
 	describe('testPullRequestTool', function(){
 
 		describe('#run(org, token, localReposPath)', function(){
