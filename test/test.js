@@ -112,20 +112,47 @@ describe('testToolSuite', function(){
 	////////////////////////////////////////////
 	describe('testPullRequestTool', function(){
 
+		var folderPath = mypath + "/pullRequesttest";
+
+		before(function (done) {
+			CloneTool.run(organization, token, folderPath)
+			.then(done)
+			.catch(this.skip)
+		});
+		
+
+
 		describe('#run(org, token, localReposPath)', function(){
 
-			if(mockingOn) {
-				nock("https://api.github.com")
-				.get("/repos/testuser/Hello-World/issues/0")
-				.reply(200, JSON.stringify(data.issueList[0]) );
-			}
-
 			it('should handle invalid organization', function(done) {
+				return PullRequestTool.run("invalidOrg", process.env.GITHUB_KEY)
+				.then(function()){
+					// Have to wrap in set timeout, otherwise get weird promise interference
+					setTimeout(function() {
+						assert.isOk(false, "The PullRequestTool should not have accepted the invalid organization.");
+						done();
+					});
+				})
+				.catch(function(e){
+					assert.isOk(true, "The PullRequestTool rejected the bad organization,as expected.");
+					done();
+				});
 
 			});
 
 			it('should handle invalid token', function(done) {
-
+				return PullRequestTool.run("OODD-Mozilla", "invalidKey")
+				.then(function()){
+					// Have to wrap in set timeout, otherwise get weird promise interference
+					setTimeout(function() {
+						assert.isOk(false, "The PullRequestTool should not have accepted the invalid gitToken");
+						done();
+					});
+				})
+				.catch(function(e){
+					assert.isOk(true, "The PullRequestTool rejected the bad git token, as expected.");
+					done();
+				});
 			});
 
 			it('should find 1 new author from new pull request', function(done) {
