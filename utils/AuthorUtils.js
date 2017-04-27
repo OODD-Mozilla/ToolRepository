@@ -4,7 +4,7 @@ var authorsFile = '/authors.json';
 function getAuthors(folderPath) {
 	try {
 		var authorsFromFile = jsonfile.readFileSync(folderPath + authorsFile);
-		return authorsFromFile;	
+		return authorsFromFile;
 	} catch(e) {
 		if(e.code == "ENOENT") {
 			return []; //File doesn't exist yet
@@ -21,5 +21,15 @@ function saveAuthors(folderPath, authors) {
 
 module.exports = {
 	getAuthors: getAuthors,
-	saveAuthors: saveAuthors
+	saveAuthors: saveAuthors,
+	uniqueArray: uniqueArray
+}
+
+/********** HELPERS ***********/
+// Removes duplicates from an array
+// Returns array without duplicates
+function uniqueArray(array) {
+    return array.filter(function(elem, pos) {
+        return array.indexOf(elem) == pos;
+    });
 }
