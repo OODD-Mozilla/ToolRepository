@@ -33,6 +33,7 @@ describe('testToolSuite', function() {
 
 		var folderPath = mypath + "/clonetest";
 
+
 		describe('#run(org, token, folderPath)', function() {
 
 			if (mockingOn) {
@@ -192,11 +193,15 @@ describe('testToolSuite', function() {
 			});
 
 			it('should find 1 new author from new pull request', function(done) {
+				var authors = AuthorUtils.getAuthors(folderPath);
+				assert.equal(authors.length, 2, "Authors file should have two authors initially.");
 				return PullRequestTool.run(organization, token, folderPath)
 					.then(function(newAuthors) {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
 							assert.equal(newAuthors.length, 1, "The PullRequestTool should have found one new author");
+							var authors = AuthorUtils.getAuthors(folderPath);
+							assert.equal(authors.length, 3, "Authors file should have two authors initially.");
 							done();
 						});
 					})
