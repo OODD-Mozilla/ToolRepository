@@ -22,7 +22,7 @@ var PullRequestTool = require("../tools/PullRequestTool.js");
 
 // Load mock data
 var data = require("./mock.json");
-var mockingOn = false;
+var mockingOn = true;
 
 describe('testToolSuite', function() {
 
@@ -33,7 +33,7 @@ describe('testToolSuite', function() {
 		//get all repos in organization - API call
 		if (mockingOn) {
 			nock("https://api.github.com")
-				.get("/repos/testuser/Hello-World/issues/0")
+				.get("/orgs/OODD-Mozilla/repos")
 				.reply(200, JSON.stringify(data.getRepos));
 		}
 
@@ -98,6 +98,12 @@ describe('testToolSuite', function() {
 	describe('testAuthorTool', function() {
 
 		var folderPath = mypath + "/authortest";
+
+		if (mockingOn) {
+			nock("https://api.github.com")
+				.get("/orgs/OODD-Mozilla/repos")
+				.reply(200, JSON.stringify(data.getRepos));
+		}
 
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
@@ -170,13 +176,13 @@ describe('testToolSuite', function() {
 					AuthorTool.run(folderPath, initUntilDate)
 						.then(function() {
 							setTimeout(function() {
-								assert.isOk(true, "The AuthorTool should not have  terminated properly.");
+								assert.isOk(true, "The AuthorTool terminated properly.");
 								//done();
 							});
 						})
 						.catch(this.skip);
 					setTimeout(function() {
-						assert.isOk(true, "The CloneTool should not have terminated properly.");
+						assert.isOk(true, "The CloneTool terminated properly.");
 						done();
 					});
 				})
