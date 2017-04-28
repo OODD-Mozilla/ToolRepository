@@ -2,31 +2,51 @@ var GitHubUtils = require('../utils/GitHubUtils');
 var AuthorUtils = require('../utils/AuthorUtils');
 var request = require('request');
 var _ = require('underscore');
-var folderPath = "C:/Users/shash/WebstormProjects/OODD/ToolRepository/toolfolder";
-var oldAuthors = AuthorUtils.getAuthors(folderPath);
+//var folderPath = "C:/Users/shash/WebstormProjects/OODD/ToolRepository/toolfolder";
+
 
 /********** PUBLIC ***********/
-function addAuthors(org, token, callback) {
+function addAuthors(org, token, folderPath, callback) {
+    var oldAuthors = AuthorUtils.getAuthors(folderPath);
+    console.log("Old authors: " + oldAuthors);
     GitHubUtils.getOrgRepos(org, token, function (repos) {
-            var newAuthors = [];
-            //console.log("Repos count: "+ repos.length);
+        var newAuthors = [];
+        var donePromise = new Promise(function(resolveDone, rejectDone) {
+
+            // Repo Promises
+            var repoPromises = [];
             repos.forEach(function (repo) {
-                //console.log("Repo URL: "+ repo.url);
-                GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, function (commitsUrls) {
-                    commitsUrls.forEach(function (pullCommitsUrl) {
-                        //console.log(pullCommitsUrl);
-                        getAuthorsFromCommits(pullCommitsUrl, token, function (authors) {
-                            console.log("Authors fetched: " + authors);
-                            newAuthors = newAuthors.concat(authors);
-                            //callback(authors);
+                var repoPromise = new Promise(function(resolveRepo, rejectRepo) {
+                    GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, function (commitsUrls) {
+
+                        // Commit Promises
+                        var commitPromises = [];
+                        commitsUrls.forEach(function (pullCommitsUrl) {
+                            var commitPromise = new Promise(function(resolveCommit, rejectCommit) {
+                                getAuthorsFromCommits(pullCommitsUrl, token, function (authors) {
+                                    //console.log("Authors fetched: " + authors);
+                                    newAuthors = newAuthors.concat(authors);
+                                    resolveCommit();
+                                });
+                            });
+                            commitPromises.push(commitPromise); 
                         });
+                        Promise.all(commitPromises).then(resolveRepo).catch(rejectRepo);
+
                     });
                 });
+                repoPromises.push(repoPromise);
             });
-            console.log("Returning: " + newAuthors);
-            callback(newAuthors);
-        }
-    );
+            Promise.all(repoPromises).then(resolveDone).catch(rejectDone);
+
+        });
+        donePromise.then(function(){
+            var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
+            var diff = _.difference(uniqueNewAuthors, oldAuthors);
+            console.log("New authors: " + diff);
+            callback(diff);
+        });
+    });
 }
 
 
@@ -55,22 +75,19 @@ function getAuthorsFromCommits(pullCommitsUrl, token, callback) {
         } else {
             var obj = JSON.parse(body);
             for (var i = 0; i < obj.length; i++) {
-                //It is displaying the author's email for now
-                //Need to change it later
-                authors.push(obj[i].commit.author.email);
-
+                authors.push(obj[i].commit.author.name);
             }
             callback(authors);
         }
     });
 }
 
-addAuthors('OODD-Mozilla', "token " + process.env.GITHUB_KEY, function (newAuthors) {
-    console.log("Final New Authors: " + newAuthors);
-    var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
-    var diff = _.difference(uniqueNewAuthors, oldAuthors);
-    if (diff.length > 0) {
-        console.log("New authors :" + diff)
-        oldAuthors = oldAuthors.concat(uniqueNewAuthors);
-    }
-});
+// addAuthors('OODD-Mozilla', "token " + process.env.GITHUB_KEY, function (newAuthors) {
+//     console.log("Final New Authors: " + newAuthors);
+//     var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
+//     var diff = _.difference(uniqueNewAuthors, oldAuthors);
+//     if (diff.length > 0) {
+//         console.log("New authors :" + diff)
+//         oldAuthors = oldAuthors.concat(uniqueNewAuthors);
+//     }
+// });
