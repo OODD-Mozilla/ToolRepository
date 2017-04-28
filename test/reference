@@ -1,0 +1,16 @@
+API URL: https://developer.github.com/v3/repos/
+
+list of all repos for an org
+==================================
+>>  https://api.github.com/orgs/OODD-Mozilla/repos
+
+list of all pull requests
+=============================
+>> https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls?state=all
+
+git commits for the pull request
+==================================
+GET /repos/:owner/:repo/pulls/:number/commits
+
+>> https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls/1/commits
+
