@@ -8,7 +8,6 @@ var _ = require('underscore');
 /********** PUBLIC ***********/
 function addAuthors(org, token, folderPath, callback) {
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
-    console.log("Old authors: " + oldAuthors);
     GitHubUtils.getOrgRepos(org, token, function (repos) {
         var newAuthors = [];
         var donePromise = new Promise(function(resolveDone, rejectDone) {
@@ -43,7 +42,6 @@ function addAuthors(org, token, folderPath, callback) {
         donePromise.then(function(){
             var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
             var diff = _.difference(uniqueNewAuthors, oldAuthors);
-            console.log("New authors: " + diff);
             callback(diff);
         });
     });

@@ -18,6 +18,7 @@ if(process.env.GITHUB_KEY == undefined) { //Make sure token is set
 }
 var token = "token " + process.env.GITHUB_KEY;
 var organization = "OODD-Mozilla";
+var initUntilDate = "18-MAR-2017";
 
 // Run the tools
 /***** Clone Tool ******/
@@ -26,14 +27,13 @@ clonePromise.then(function() {
 	console.log("Repositories cloned successfully.");
 
 	/***** Author Tool ******/
-	var authorPromise = AuthorTool.run(folderPath);
-	authorPromise.then(function() {
+	var authorPromise = AuthorTool.run(folderPath, initUntilDate);
+	authorPromise.then(function(initialAuthors) {
 		console.log("Local authors initialized successfully.");
-
+		console.log("Initial authors: " + initialAuthors);
 		/***** Pull Request Tool ******/
-		console.log("Getting new authors...");
 		PullRequestTool.run(organization, token, folderPath, function(authors){
-			console.log(authors);
+			console.log("New authors: " + authors);
 		});
 		
 	});
