@@ -194,14 +194,14 @@ describe('testToolSuite', function() {
 
 			it('should find 1 new author from new pull request', function(done) {
 				var authors = AuthorUtils.getAuthors(folderPath);
-				assert.equal(authors.length, 2, "Authors file should have two authors initially.");
+				assert.equal(authors.length, 1, "Authors file should have one author initially.");
 				return PullRequestTool.run(organization, token, folderPath)
 					.then(function(newAuthors) {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
 							assert.equal(newAuthors.length, 1, "The PullRequestTool should have found one new author");
 							var authors = AuthorUtils.getAuthors(folderPath);
-							assert.equal(authors.length, 3, "Authors file should have two authors initially.");
+							assert.equal(authors.length, 2, "Authors file should have another author.");
 							done();
 						});
 					})

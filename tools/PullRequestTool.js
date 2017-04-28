@@ -46,7 +46,9 @@ function addAuthors(org, token, folderPath, callback) {
             Promise.all(repoPromises).then(function(){
                 var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
                 var diff = _.difference(uniqueNewAuthors, oldAuthors);
-                resolveDone(diff)
+                var allAuthors = oldAuthors.concat(diff);
+                AuthorUtils.saveAuthors(folderPath, allAuthors);
+                resolveDone(diff);
             }).catch(rejectDone);
 
         });
