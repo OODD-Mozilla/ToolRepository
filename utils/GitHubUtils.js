@@ -1,87 +1,65 @@
 var request = require('request');
 var githubUrlRoot = "https://api.github.com";
 
+function getOptions(url, token) {
+    return  {
+        url: url,
+        method: 'GET',
+        headers: {
+            "User-Agent": "EnableIssues",
+            "content-type": "application/json",
+            "Authorization": token
+        }
+    };
+}
+
+function sendRequest(url, token, callback) {
+    request(getOptions(url, token), function (error, response, body) {
+        if (error) {
+            console.log("Error in GitHub request", error);
+        } else {
+            callback(response, body);
+        }
+    });
+}
+
 module.exports = {
 
     //Returns the list of repos for particular org
     getOrgRepos: function (org, token, callback) {
-        //to be used while making http call
-        var options = {
-            url: githubUrlRoot + '/orgs/' + org + '/repos',
-            method: 'GET',
-            headers: {
-                "User-Agent": "EnableIssues",
-                "content-type": "application/json",
-                "Authorization": token
+        var url = githubUrlRoot + '/orgs/' + org + '/repos';
+        sendRequest(url, token, function(response, body){
+            if(response.statusCode != 200) {
+                callback(null);
+                return;
             }
-        };
-
-        //make http call using request library
-        request(options, function (error, response, body) {
-            if (error) {
-                console.log("Error in getting all repos ", error);
-            } else {
-                if(response.statusCode != 200) {
-                    callback(null);
-                    return;
-                }
-                callback(JSON.parse(body));
-            }
+            callback(JSON.parse(body));
         });
     },
 
     //to be used to all the closed pull requests' URL from specified repo
     getCommitsUrlFromAllPulls: function (repoUrl, token, callback) {
-        //to be used while making http call
-        var options = {
-            url: repoUrl + '/pulls?state=closed',
-            method: 'GET',
-            headers: {
-                "User-Agent": "EnableIssues",
-                "content-type": "application/json",
-                "Authorization": token
+        var url = repoUrl + '/pulls?state=closed';
+        sendRequest(url, token, function(response, body){
+            var obj = JSON.parse(body);
+            var commitsUrlList = [];
+            for (var i = 0; i < obj.length; i++) {
+                commitsUrlList.push(obj[i].commits_url);
             }
-        };
-
-        //make http call using request library
-        request(options, function (error, response, body) {
-            if (error) {
-                console.log("Error in getting all pull requests ", error);
-            } else {
-                var obj = JSON.parse(body);
-                var commitsUrlList = [];
-                for (var i = 0; i < obj.length; i++) {
-                    commitsUrlList.push(obj[i].commits_url);
-                }
-                callback(commitsUrlList);
-            }
+            callback(commitsUrlList);
         });
     },
 
     //Gets authors from commit
     getAuthorsFromCommit : function(commitUrl, token, callback) {
-        var authors = [];
-        var options = {
-            url: commitUrl,
-            method: 'GET',
-            headers: {
-                "User-Agent": "EnableIssues",
-                "content-type": "application/json",
-                "Authorization": token
+        sendRequest(commitUrl, token, function (response, body) {
+            body = JSON.parse(body);
+            var authors = [];
+            for (var i = 0; i < body.length; i++) {
+                authors.push(body[i].commit.author.name);
             }
-        };
-
-        //make http call using request library
-        request(options, function (error, response, body) {
-            if (error) {
-                console.log("Error in getting all pull requests", error);
-            } else {
-                var obj = JSON.parse(body);
-                for (var i = 0; i < obj.length; i++) {
-                    authors.push(obj[i].commit.author.name);
-                }
-                callback(authors);
-            }
+            callback(authors);
         });
     }
+
 };
