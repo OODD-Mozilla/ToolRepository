@@ -1,46 +1,71 @@
 # ToolRepository
 
-  
-## Tool # 1: JSON author file 
-* [Issue #3](../../issues/3)
-* create a tool that initializes a JSON file with the known authors for a local git repository
-* `AuthorDetails.js`
+
+##Tool # 1: Clone Tool
+Location: `tools/CloneTool.js`
+
+* Clones all repositories in the given organization into the specified folder
+* Parameters
+ * folderPath - the path to the folder that will hold the repos folder, where the repositories will be cloned
+ * token - the GITHUB token, required to use the GitHub API
+ * organization - the organization whose repositories will be cloned
+* Returns a promise that is resolved if all repositories are clones successfully, and is rejected otherwise
 
 
-## Tool # 2: Clone repositories Tool 
-* [Issue #4](../../issues/4)
-* create a tool that clones every git repository in a given github organization (use the github API to retrieve this information)
-* `package.json` has the dependencies needed to run both the tools.
-* `gitApi.js` - clones the all the repos in the given organization inside `./tmp` folder
-  * On line # 12 - define the GITAPI token as environment variable `GITHUB_KEY` **check references below for token**
-  * On line # 13 - define the username of the git account user
-  * On line # 18 - define the organization of interest from where repos need to be cloned
-![Lines to be edited in gitApi.js](/images/capture.png)
+## Tool # 2: Initialization Tool
+Location: `tools/InitTool.js`
+
+* Creates / Updates a JSON file with the authors for the repositories in the given path
+* Parameters
+ * folderPath - the path to the folder that holds repos, the folder with the local repositories, cloned by the CloneTool.
+ * untilDate - date to analyze authors until, in form DD-MMM-YYYY, e.g. 25-APR-2017
+* Returns a promise that is resolved if the authors are saved to authors.json, and is rejected otherwise
+
+
+##Tool # 3: Pull Request Tool
+Location: `tools/PullRequestTool.js`
+
+* Gives a list of authors of closed pull requests that are not listed in authors.json
+* Parameters
+ * folderPath - the path to the folder that has the repositories and authors
+ * token - the GITHUB token, required to use the GitHub API
+ * organization - the organization whose repositories will be cloned
+* Returns a promise that is resolved with new authors, or rejected if something goes wrong
+
+## Using the Tools
+All tools return a JavaScript promise, which allows for flexible use and chaining. We created a driver program, Main.js, to provide an example and a way to quickly use the tools. It runs the tools in sequence, CloneTool, InitTool, and PullRequest tool, and provides them with the necessary parameters, including folder to put the repositories and authors. To use the driver, you must change the parameters to match your needs. 
+
+Additionally, you will need to create a GitHub token and set your GITHUB_KEY environment variable to it. Please see the Reference section for more information.
+
+The necessary commands in Git Bash are as follows:
 
 ~~~~
+export GITHUB_KEY=<your token here>
 git clone https://github.com/OODD-Mozilla/ToolRepository.git
 cd ToolRepository
 npm install  
+<change parameters in Main.js>
+node Main.js
 ~~~~
+
+## Testing
+
+
+To run the test suite, execute:
+~~~~
+npm test
+~~~~
+
+All tests can be found in test/test.js. To turn mocking on or off, you can set the isMocking flag in test.js on line 25.
+
+####White-box Testing
+
+We created 2-3 tests per tool, covering equivalence classes and exception cases. We ensured the tools properly handle bad input, including invalid organization or GitHub token.
+ 
+####Black-box Testing
+TODO: put the test plan table images here
+
+
 ### References
 * To generate a github api token: https://github.com/blog/1509-personal-api-tokens
 * To add it as an environment variable: https://nycda.com/blog/using-environment-variables-to-safely-store-api-credentials
-
-### RUN TEST CASES ####
-
-
-For testing gitApi.js - first fix the lines below before executing the command
-
-
-*Fix lines 12, 13, 18 as mentioned above before trying to run it.*
-~~~~
-node gitApi.js
-~~~~
-
-
-| Test ID      | Description                                                                                                                                                                                                                                                               | Expected                                                      | Actual                                                        | Pass/Fail |
-|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|-----------|
-| testClone    | (1) The getRepos method with the OODD-Mozilla as the organization name (2) The call to this method with that argument leads to 6 repos to be cloned (3) The repos are created in /tmp folder (4) run node gitApi.js command  Currently - testCase1() method in gitApi.js  | << on console>> Test Case 1: Successfully clone 6 repos       | << on console>> Test Case 1: Successfully clone 6 repos       | pass      |
-| testWrongOrg | (1) The getRepos method with the DNE as the organization name (2) The call to this method with cause a response with error from GITHUB API (3) run node gitApi.js command  Currently - testCase2() method in gitApi.js                                                    | Test Case 2: Sorry no repos were cloned from DNE organization | Test Case 2: Sorry no repos were cloned from DNE organization | pass      |
-|              |                                                                                                                                                                                                                                                                           |                                                               |                                                               |           |
-
