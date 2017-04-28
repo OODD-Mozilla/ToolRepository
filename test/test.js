@@ -17,7 +17,7 @@ var initUntilDate = "18-MAR-2017";
 
 // Require Tools
 var CloneTool = require("../tools/CloneTool.js");
-var AuthorTool = require("../tools/AuthorTool.js");
+var InitTool = require("../tools/InitTool.js");
 var PullRequestTool = require("../tools/PullRequestTool.js");
 
 // Load mock data
@@ -95,9 +95,9 @@ describe('testToolSuite', function() {
 	});
 
 	////////////////////////////////////////
-	// MOCHA TEST SUITE FOR AuthorTool.js
+	// MOCHA TEST SUITE FOR InitTool.js
 	////////////////////////////////////////
-	describe('testAuthorTool', function() {
+	describe('testInitTool', function() {
 
 		var folderPath = mypath + "/authortest";
 
@@ -110,23 +110,23 @@ describe('testToolSuite', function() {
 		describe('#run(folderPath)', function() {
 
 			it('should handle invalid path', function(done) {
-				return AuthorTool.run("NonexistentPath")
+				return InitTool.run("NonexistentPath")
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
-							assert.isOk(false, "The AuthorTool should not have accepted the bad path.");
+							assert.isOk(false, "The InitTool should not have accepted the bad path.");
 							done();
 						});
 					})
 					.catch(function(e) {
-						assert.isOk(true, "The AuthorTool rejected the bad path, as expected.");
+						assert.isOk(true, "The InitTool rejected the bad path, as expected.");
 						done();
 					});
 			});
 
 			//TODO: decouple from clone tool folder
 			it('should find 6 authors in OODD-Mozilla organization', function(done) {
-				return AuthorTool.run(folderPath)
+				return InitTool.run(folderPath)
 					.then(function() {
 						var authors = AuthorUtils.getAuthors(folderPath);
 						assert.equal(authors.length, 6, "Authors file has expected number of authors");
@@ -154,16 +154,16 @@ describe('testToolSuite', function() {
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
 				.then(function() {
-					AuthorTool.run(folderPath, initUntilDate)
+					InitTool.run(folderPath, initUntilDate)
 						.then(function() {
 							setTimeout(function() {
-								assert.isOk(true, "The AuthorTool terminated properly.");
+								assert.isOk(true, "The InitTool terminated properly.");
 								done();
 							});
 						})
 						.catch(function(e){	
 							setTimeout(function() {
-							assert.isOk(false, "Authors tool not initialized.");
+							assert.isOk(false, "Authors not initialized.");
 							done();
 							this.skip();
 						});

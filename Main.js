@@ -6,7 +6,7 @@ var slash = require('slash');
 
 // Load Tools
 var CloneTool = require("./tools/CloneTool.js");
-var AuthorTool = require("./tools/AuthorTool.js");
+var InitTool = require("./tools/InitTool.js");
 var PullRequestTool = require("./tools/PullRequestTool.js");
 
 // Setup
@@ -26,9 +26,9 @@ var clonePromise = CloneTool.run(organization, token, folderPath);
 clonePromise.then(function() {
 	console.log("Repositories cloned successfully.");
 
-	/***** Author Tool ******/
-	var authorPromise = AuthorTool.run(folderPath, initUntilDate);
-	authorPromise.then(function(initialAuthors) {
+	/***** Initialization Tool ******/
+	var initPromise = InitTool.run(folderPath, initUntilDate);
+	initPromise.then(function(initialAuthors) {
 		console.log("Local authors initialized successfully.");
 
 		console.log("Initial authors: " + initialAuthors);
