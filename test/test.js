@@ -13,6 +13,7 @@ if (process.env.GITHUB_KEY == undefined) { //Make sure token is set
 }
 var token = "token " + process.env.GITHUB_KEY;
 var organization = "OODD-Mozilla";
+var initUntilDate = "18-MAR-2017";
 
 // Require Tools
 var CloneTool = require("../tools/CloneTool.js");
@@ -32,8 +33,7 @@ describe('testToolSuite', function() {
 
 		var folderPath = mypath + "/clonetest";
 
-
-		describe('#run(org, token, localReposPath)', function() {
+		describe('#run(org, token, folderPath)', function() {
 
 			if (mockingOn) {
 				nock("https://api.github.com")
@@ -58,7 +58,7 @@ describe('testToolSuite', function() {
 
 
 			it('should handle invalid token', function(done) {
-				return CloneTool.run(organization, "wrong token ", folderPath)
+				return CloneTool.run(organization, "wrong token", folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -67,13 +67,25 @@ describe('testToolSuite', function() {
 						});
 					})
 					.catch(function(e) {
-						assert.isNull(token, 'CloneTool rejected since the git token cannot be null');
-
+						assert.isOk(true, 'CloneTool rejected since the git token cannot be null');
+						done();
 					});
 			});
 
 			it('should clone 2 repos for OODD-Mozilla', function(done) {
-				//assert.
+				return CloneTool.run(organization, token, folderPath)
+					.then(function() {
+						setTimeout(function() {
+							assert.isOk(true, "The CloneTool should have run successfully.");
+							done();
+						});
+					})
+					.catch(function(e) {
+						setTimeout(function() {
+							assert.isOk(false, 'The CloneTool should not have failed.');
+							done();
+						});
+					});
 			});
 
 		});
@@ -140,16 +152,16 @@ describe('testToolSuite', function() {
 
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
-				.then(done)
-				.catch(this.skip)
+				.then(function(){
+					AuthorTool.run(folderPath, initUntilDate).then(done).catch(this.skip);
+				})
+				.catch(this.skip);
 		});
-
-
 
 		describe('#run(org, token, localReposPath)', function() {
 
 			it('should handle invalid organization', function(done) {
-				return PullRequestTool.run("invalidOrg", process.env.GITHUB_KEY)
+				return PullRequestTool.run("invalidOrg", token)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -180,7 +192,20 @@ describe('testToolSuite', function() {
 			});
 
 			it('should find 1 new author from new pull request', function(done) {
-
+				return PullRequestTool.run(organization, token, folderPath)
+					.then(function(newAuthors) {
+						// Have to wrap in set timeout, otherwise get weird promise interference
+						setTimeout(function() {
+							assert.equal(newAuthors.length, 1, "The PullRequestTool should have found one new author");
+							done();
+						});
+					})
+					.catch(function(e) {
+						setTimeout(function() {
+							assert.isOk(false, "The tool should have run successfully.");
+							done();
+						});
+					});
 			});
 
 		});

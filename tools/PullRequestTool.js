@@ -12,6 +12,12 @@ function addAuthors(org, token, folderPath, callback) {
 
     return new Promise(function(resolveDone, rejectDone) {
         GitHubUtils.getOrgRepos(org, token, function (repos) {
+
+            if(!repos){
+                rejectDone("Error getting repos for organization.");
+                return;
+            }
+
             // Repo Promises
             var repoPromises = [];
             repos.forEach(function (repo) {

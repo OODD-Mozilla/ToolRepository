@@ -11,6 +11,10 @@ function cloneRepos(org, token, folderPath) {
 	var localReposPath = folderPath + "/repos";
 	return new Promise(function(resolve, reject){
 		GitHubUtils.getOrgRepos(org, token, function(repos) {
+			if(!repos){
+				reject("Error getting repos for organization.");
+				return;
+			}
 			var allPromises = [];
 			repos.forEach(function(repo){
 				allPromises.push(cloneRepo(localReposPath, repo.name, repo.clone_url));

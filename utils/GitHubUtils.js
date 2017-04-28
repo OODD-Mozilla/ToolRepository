@@ -21,6 +21,10 @@ module.exports = {
             if (error) {
                 console.log("Error in getting all repos ", error);
             } else {
+                if(response.statusCode != 200) {
+                    callback(null);
+                    return;
+                }
                 callback(JSON.parse(body));
             }
         });
