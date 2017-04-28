@@ -83,6 +83,6 @@ We created 2-3 tests per tool, covering equivalence classes and exception cases.
 TODO: put the test plan table images here
 
 
-### References
+## References
 * To generate a github api token: https://github.com/blog/1509-personal-api-tokens
 * To add it as an environment variable: https://nycda.com/blog/using-environment-variables-to-safely-store-api-credentials
