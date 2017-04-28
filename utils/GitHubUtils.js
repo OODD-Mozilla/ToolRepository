@@ -56,5 +56,32 @@ module.exports = {
                 callback(commitsUrlList);
             }
         });
+    },
+
+    //Gets authors from commit
+    getAuthorsFromCommit : function(commitUrl, token, callback) {
+        var authors = [];
+        var options = {
+            url: commitUrl,
+            method: 'GET',
+            headers: {
+                "User-Agent": "EnableIssues",
+                "content-type": "application/json",
+                "Authorization": token
+            }
+        };
+
+        //make http call using request library
+        request(options, function (error, response, body) {
+            if (error) {
+                console.log("Error in getting all pull requests", error);
+            } else {
+                var obj = JSON.parse(body);
+                for (var i = 0; i < obj.length; i++) {
+                    authors.push(obj[i].commit.author.name);
+                }
+                callback(authors);
+            }
+        });
     }
 };
