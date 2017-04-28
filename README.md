@@ -1,7 +1,7 @@
 # ToolRepository
 
 
-##Tool # 1: Clone Tool
+## Tool # 1: Clone Tool
 Location: `tools/CloneTool.js`
 
 * Clones all repositories in the given organization into the specified folder
@@ -22,7 +22,7 @@ Location: `tools/InitTool.js`
 * Returns a promise that is resolved if the authors are saved to authors.json, and is rejected otherwise
 
 
-##Tool # 3: Pull Request Tool
+## Tool # 3: Pull Request Tool
 Location: `tools/PullRequestTool.js`
 
 * Gives a list of authors of closed pull requests that are not listed in authors.json
@@ -58,11 +58,11 @@ npm test
 
 All tests can be found in test/test.js. To turn mocking on or off, you can set the isMocking flag in test.js on line 25.
 
-####White-box Testing
+#### White-box Testing
 
 We created 2-3 tests per tool, covering equivalence classes and exception cases. We ensured the tools properly handle bad input, including invalid organization or GitHub token.
  
-####Black-box Testing
+#### Black-box Testing
 TODO: put the test plan table images here
 
 
