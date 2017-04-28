@@ -30,20 +30,19 @@ describe('testToolSuite', function() {
 	// MOCHA TEST SUITE FOR CloneTool.js
 	///////////////////////////////////////
 	describe('testCloneTool', function() {
+		//get all repos in organization - API call
+		if (mockingOn) {
+			nock("https://api.github.com")
+				.get("/repos/testuser/Hello-World/issues/0")
+				.reply(200, JSON.stringify(data.getRepos));
+		}
 
 		var folderPath = mypath + "/clonetest";
-
-
 		describe('#run(org, token, folderPath)', function() {
 
-			if (mockingOn) {
-				nock("https://api.github.com")
-					.get("/repos/testuser/Hello-World/issues/0")
-					.reply(200, JSON.stringify(data.issueList[0]));
-			}
 
 			it('should handle invalid organization', function(done) {
-				return CloneTool.run("invalid org",  token, folderPath)
+				return CloneTool.run("invalid org", token, folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -149,12 +148,37 @@ describe('testToolSuite', function() {
 	////////////////////////////////////////////
 	describe('testPullRequestTool', function() {
 
-		var folderPath = mypath + "/pullRequesttest";
+		if (mockingOn) {
 
+			// get all pull request - api call
+			var getPulls = nock("https://api.github.com")
+				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=all")
+				.reply(200, JSON.stringify(data.getPullRequests));
+
+			// get all commits per pull request
+			var commitsOnPull = nock("https://api.github.com")
+				.get("/repos/OODD-Mozilla/TestRepo/pulls/1/commits")
+				.reply(200, JSON.stringify(data.getCommits));
+
+		}
+
+
+		var folderPath = mypath + "/pullRequesttest";
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
-				.then(function(){
-					AuthorTool.run(folderPath, initUntilDate).then(done).catch(this.skip);
+				.then(function() {
+					AuthorTool.run(folderPath, initUntilDate)
+						.then(function() {
+							setTimeout(function() {
+								assert.isOk(true, "The AuthorTool should not have  terminated properly.");
+								//done();
+							});
+						})
+						.catch(this.skip);
+					setTimeout(function() {
+						assert.isOk(true, "The CloneTool should not have terminated properly.");
+						done();
+					});
 				})
 				.catch(this.skip);
 		});
