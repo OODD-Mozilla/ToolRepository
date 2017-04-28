@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 
 /********** PUBLIC ***********/
-function addAuthors(org, token, folderPath, callback) {
+function addAuthors(org, token, folderPath, pullSinceDate, callback) {
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
     var newAuthors = [];
 
@@ -22,7 +22,7 @@ function addAuthors(org, token, folderPath, callback) {
             var repoPromises = [];
             repos.forEach(function (repo) {
                 var repoPromise = new Promise(function(resolveRepo, rejectRepo) {
-                    GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, function (commitsUrls) {
+                    GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, pullSinceDate, function (commitsUrls) {
 
                         // Commit Promises
                         var commitPromises = [];
