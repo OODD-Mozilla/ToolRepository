@@ -30,10 +30,12 @@ clonePromise.then(function() {
 	var authorPromise = AuthorTool.run(folderPath, initUntilDate);
 	authorPromise.then(function(initialAuthors) {
 		console.log("Local authors initialized successfully.");
+
 		console.log("Initial authors: " + initialAuthors);
 		/***** Pull Request Tool ******/
-		PullRequestTool.run(organization, token, folderPath, function(authors){
-			console.log("New authors: " + authors);
+		var pullRequestPromise = PullRequestTool.run(organization, token, folderPath);
+		pullRequestPromise.then(function(newAuthors){
+			console.log("New authors: " + newAuthors);
 		});
 		
 	});

@@ -8,10 +8,10 @@ var _ = require('underscore');
 /********** PUBLIC ***********/
 function addAuthors(org, token, folderPath, callback) {
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
-    GitHubUtils.getOrgRepos(org, token, function (repos) {
-        var newAuthors = [];
-        var donePromise = new Promise(function(resolveDone, rejectDone) {
+    var newAuthors = [];
 
+    return new Promise(function(resolveDone, rejectDone) {
+        GitHubUtils.getOrgRepos(org, token, function (repos) {
             // Repo Promises
             var repoPromises = [];
             repos.forEach(function (repo) {
@@ -36,14 +36,15 @@ function addAuthors(org, token, folderPath, callback) {
                 });
                 repoPromises.push(repoPromise);
             });
-            Promise.all(repoPromises).then(resolveDone).catch(rejectDone);
+            // When all repos have been analyzed, resolve done promise with new authors
+            Promise.all(repoPromises).then(function(){
+                var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
+                var diff = _.difference(uniqueNewAuthors, oldAuthors);
+                resolveDone(diff)
+            }).catch(rejectDone);
 
         });
-        donePromise.then(function(){
-            var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
-            var diff = _.difference(uniqueNewAuthors, oldAuthors);
-            callback(diff);
-        });
+        
     });
 }
 
