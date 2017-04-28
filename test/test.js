@@ -35,6 +35,10 @@ describe('testToolSuite', function() {
 			nock("https://api.github.com")
 				.get("/orgs/OODD-Mozilla/repos")
 				.reply(200, JSON.stringify(data.getRepos));
+
+			nock("https://api.github.com")
+				.get("/orgs/invalidOrg/repos")
+				.reply(200, JSON.stringify(data.invalidOrg));
 		}
 
 		var folderPath = mypath + "/clonetest";
@@ -42,7 +46,7 @@ describe('testToolSuite', function() {
 
 
 			it('should handle invalid organization', function(done) {
-				return CloneTool.run("invalid org", token, folderPath)
+				return CloneTool.run("invalidOrg", token, folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -58,7 +62,7 @@ describe('testToolSuite', function() {
 
 
 			it('should handle invalid token', function(done) {
-				return CloneTool.run(organization, "wrong token", folderPath)
+				return CloneTool.run(organization, "wrongToken", folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {

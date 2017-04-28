@@ -486,8 +486,7 @@
 				"href": "https://api.github.com/repos/OODD-Mozilla/TestRepo/statuses/14ef19ed5aa356a59869648510cd72af0e9109aa"
 			}
 		}
-	}]
-,
+	}],
 	"getCommits":
 
 		[{
@@ -558,4 +557,11 @@
 			"html_url": "https://github.com/OODD-Mozilla/TestRepo/commit/617bc5bb2b9660dc2f412af486a0cae4b50e309b"
 		}]
 	}]
+	,
+
+	"invalidOrg": [{
+		"message": "Not Found",
+		"documentation_url": "https://developer.github.com/v3"
+	}]
+
 }
