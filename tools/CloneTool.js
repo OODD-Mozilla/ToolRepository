@@ -46,8 +46,7 @@ function cleanRepoFolder(localReposPath) {
 	try {
 		fs.accessSync(localReposPath);
 		try {
-			//execSync("rm -r '" + localReposPath + "'");
-			fs.removeSync(localReposPath) // check if path needs singlequotes
+			fs.removeSync(localReposPath)
 		} catch (e) {
 			console.log("Problem removing repo folder. " + e);
 		}

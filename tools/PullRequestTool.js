@@ -55,20 +55,6 @@ function addAuthors(org, token, folderPath, callback) {
     });
 }
 
-
 module.exports = {
     run: addAuthors
 };
-
-/********** PRIVATE ***********/
-
-
-// addAuthors('OODD-Mozilla', "token " + process.env.GITHUB_KEY, function (newAuthors) {
-//     console.log("Final New Authors: " + newAuthors);
-//     var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
-//     var diff = _.difference(uniqueNewAuthors, oldAuthors);
-//     if (diff.length > 0) {
-//         console.log("New authors :" + diff)
-//         oldAuthors = oldAuthors.concat(uniqueNewAuthors);
-//     }
-// });

@@ -1,7 +1,7 @@
 {
-  "name": "GithubREST",
+  "name": "GitHubAuthorTools",
   "version": "1.0.0",
-  "description": "Creating startups, one landing page at a time.",
+  "description": "Tool suite for tracking GitHub organization authors",
   "main": "gitApi.js",
   "engines": {
     "node": ">=0.12.0"
@@ -10,17 +10,14 @@
     "test": "mocha"
   },
   "dependencies": {
-    "bluebird": "^3.2.2",
     "chai": "^3.5.0",
     "fs-extra": "latest",
     "mocha": "^0.3.6",
     "nock": "^9.0.13",
     "nodegit": "latest",
-    "parse-link-header": "^0.4.1",
     "path": "latest",
     "request": "^2.67.0",
     "slash": "latest",
-    "shelljs": "latest",
     "underscore": "latest"
   }
 }
