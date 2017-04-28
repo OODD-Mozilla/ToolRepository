@@ -65,7 +65,7 @@ function getRepoPaths(pathToRepos) {
 	    }
 		return repoPaths;
 	} catch(e) {
-		console.log("Unable to read repositories: " + e);
+		//console.log("Unable to read repositories.");
 		return null;
 	}	
 }

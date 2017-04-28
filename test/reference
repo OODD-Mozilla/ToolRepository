@@ -4,9 +4,9 @@ list of all repos for an org
 ==================================
 >>  https://api.github.com/orgs/OODD-Mozilla/repos
 
-list of all pull requests
+list of closed pull requests
 =============================
->> https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls?state=all
+>> https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls?state=closed
 
 git commits for the pull request
 ==================================

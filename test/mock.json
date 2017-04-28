@@ -186,9 +186,10 @@
 			"pull": true
 		}
 	}],
+	
+	"getPullRequests_ToolRepository": [],
 
-
-	"getPullRequests": [{
+	"getPullRequests_TestRepo": [{
 		"url": "https://api.github.com/repos/OODD-Mozilla/TestRepo/pulls/1",
 		"id": 117370771,
 		"html_url": "https://github.com/OODD-Mozilla/TestRepo/pull/1",
@@ -559,9 +560,9 @@
 	}]
 	,
 
-	"invalidOrg": [{
+	"invalidRequest": {
 		"message": "Not Found",
 		"documentation_url": "https://developer.github.com/v3"
-	}]
+	}
 
 }

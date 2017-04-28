@@ -30,22 +30,36 @@ describe('testToolSuite', function() {
 	// MOCHA TEST SUITE FOR CloneTool.js
 	///////////////////////////////////////
 	describe('testCloneTool', function() {
-		//get all repos in organization - API call
-		if (mockingOn) {
-			nock("https://api.github.com")
-				.get("/orgs/OODD-Mozilla/repos")
-				.reply(200, JSON.stringify(data.getRepos));
 
-			nock("https://api.github.com")
-				.get("/orgs/invalidOrg/repos")
-				.reply(200, JSON.stringify(data.invalidOrg));
+		if (mockingOn) {
+			var invalidOrg = nock("https://api.github.com").persist()
+			.get("/orgs/invalidOrg/repos")
+			.reply(404, JSON.stringify(data.invalidRequest));
+
+			var validRepo = nock("https://api.github.com").persist()
+			.get("/orgs/OODD-Mozilla/repos")
+			.reply(200, JSON.stringify(data.getRepos));
+
+			var getPullsTestRepo = nock("https://api.github.com").persist()
+				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=closed")
+				.reply(200, JSON.stringify(data.getPullRequests_TestRepo));
+
+			//TODO
+			var getPullsToolRepository = nock("https://api.github.com").persist()
+				.get("/repos/OODD-Mozilla/ToolRepository/pulls?state=closed")
+				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
+
+			// get all commits per pull request
+			var commitsOnPull = nock("https://api.github.com").persist()
+				.get("/repos/OODD-Mozilla/TestRepo/pulls/1/commits")
+				.reply(200, JSON.stringify(data.getCommits));
 		}
 
 		var folderPath = mypath + "/clonetest";
 		describe('#run(org, token, folderPath)', function() {
 
-
 			it('should handle invalid organization', function(done) {
+				
 				return CloneTool.run("invalidOrg", token, folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
@@ -56,22 +70,6 @@ describe('testToolSuite', function() {
 					})
 					.catch(function(e) {
 						assert.isOk(true, "The CloneTool rejected the bad organization.");
-						done();
-					});
-			});
-
-
-			it('should handle invalid token', function(done) {
-				return CloneTool.run(organization, "wrongToken", folderPath)
-					.then(function() {
-						// Have to wrap in set timeout, otherwise get weird promise interference
-						setTimeout(function() {
-							assert.isOk(false, "The CloneTool should not have cloned from invalid git token.");
-							done();
-						});
-					})
-					.catch(function(e) {
-						assert.isOk(true, 'CloneTool rejected since the git token cannot be null');
 						done();
 					});
 			});
@@ -102,12 +100,6 @@ describe('testToolSuite', function() {
 	describe('testAuthorTool', function() {
 
 		var folderPath = mypath + "/authortest";
-
-		if (mockingOn) {
-			nock("https://api.github.com")
-				.get("/orgs/OODD-Mozilla/repos")
-				.reply(200, JSON.stringify(data.getRepos));
-		}
 
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
@@ -158,21 +150,6 @@ describe('testToolSuite', function() {
 	////////////////////////////////////////////
 	describe('testPullRequestTool', function() {
 
-		if (mockingOn) {
-
-			// get all pull request - api call
-			var getPulls = nock("https://api.github.com")
-				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=all")
-				.reply(200, JSON.stringify(data.getPullRequests));
-
-			// get all commits per pull request
-			var commitsOnPull = nock("https://api.github.com")
-				.get("/repos/OODD-Mozilla/TestRepo/pulls/1/commits")
-				.reply(200, JSON.stringify(data.getCommits));
-
-		}
-
-
 		var folderPath = mypath + "/pullRequesttest";
 		before(function(done) {
 			CloneTool.run(organization, token, folderPath)
@@ -181,13 +158,15 @@ describe('testToolSuite', function() {
 						.then(function() {
 							setTimeout(function() {
 								assert.isOk(true, "The AuthorTool terminated properly.");
-								//done();
+								done();
 							});
 						})
-						.catch(this.skip);
-					setTimeout(function() {
-						assert.isOk(true, "The CloneTool terminated properly.");
-						done();
+						.catch(function(e){	
+							setTimeout(function() {
+							assert.isOk(false, "Authors tool not initialized.");
+							done();
+							this.skip();
+						});
 					});
 				})
 				.catch(this.skip);
@@ -228,14 +207,14 @@ describe('testToolSuite', function() {
 
 			it('should find 1 new author from new pull request', function(done) {
 				var authors = AuthorUtils.getAuthors(folderPath);
-				assert.equal(authors.length, 1, "Authors file should have one author initially.");
+				assert.equal(authors.length, 2, "Authors file should have two authors initially.");
 				return PullRequestTool.run(organization, token, folderPath)
 					.then(function(newAuthors) {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
 							assert.equal(newAuthors.length, 1, "The PullRequestTool should have found one new author");
 							var authors = AuthorUtils.getAuthors(folderPath);
-							assert.equal(authors.length, 2, "Authors file should have another author.");
+							assert.equal(authors.length, 3, "Authors file should have another author.");
 							done();
 						});
 					})
