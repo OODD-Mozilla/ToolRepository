@@ -53,7 +53,7 @@ module.exports = {
     },
 
     //Gets authors from all the commits of given pull
-    getAuthorsFromCommit: function (pullUrl, token, callback) {
+    getAuthorsFromPull: function (pullUrl, token, callback) {
         sendRequest(pullUrl + "/commits", token, function (response, body) {
             var obj = JSON.parse(body);
             var authors = [];

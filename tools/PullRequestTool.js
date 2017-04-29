@@ -18,7 +18,7 @@ function addAuthors(org, token, folderPath, pullSinceDate, callback) {
             // Commit Promises
             pullsUrls.forEach(function (pullUrl) {
                 var commitPromise = new Promise(function (resolveCommit, rejectCommit) {
-                    GitHubUtils.getAuthorsFromCommit(pullUrl, token, function (authors) {
+                    GitHubUtils.getAuthorsFromPull(pullUrl, token, function (authors) {
                         newAuthors = newAuthors.concat(authors);
                         resolveCommit();
                     });
