@@ -80,9 +80,7 @@ All tests can be found in test/test.js. To turn mocking on or off, you can set t
 We created 2-3 tests per tool, covering equivalence classes and exception cases. We ensured the tools properly handle bad input, including invalid organization or GitHub token.
  
 #### Black-box Testing
-![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table1.png)
-![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table2.PNG)
-![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table3.PNG)
+![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/bbtestPlan.PNG)
 
 ## References
 * To generate a github api token: https://github.com/blog/1509-personal-api-tokens
