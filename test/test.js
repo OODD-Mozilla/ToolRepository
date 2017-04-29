@@ -45,7 +45,7 @@ describe('testToolSuite', function() {
 				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=closed&sort=closed_at&direction=desc")
 				.reply(200, JSON.stringify(data.getPullRequests_TestRepo));
 
-			//TODO
+			
 			var getPullsToolRepository = nock("https://api.github.com").persist()
 				.get("/repos/OODD-Mozilla/ToolRepository/pulls?state=closed&sort=closed_at&direction=desc")
 				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
@@ -54,6 +54,18 @@ describe('testToolSuite', function() {
 			var commitsOnPull = nock("https://api.github.com").persist()
 				.get("/repos/OODD-Mozilla/TestRepo/pulls/1/commits")
 				.reply(200, JSON.stringify(data.getCommits));
+			//get pulls from issues
+			//"https://api.github.com/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017",
+
+			var getFromIssues = nock("https://api.github.com").persist()
+				.get("/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
+				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
+
+			var getFromIssues = nock("https://api.github.com").persist()
+				.get("/orgs/invalidOrg/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
+				.reply(200, JSON.stringify(data.invalidRequest));
+
+
 		}
 
 		var folderPath = mypath + "/clonetest";
