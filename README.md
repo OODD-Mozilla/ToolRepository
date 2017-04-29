@@ -81,8 +81,8 @@ We created 2-3 tests per tool, covering equivalence classes and exception cases.
  
 #### Black-box Testing
 ![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table1.png)
-![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table2.png)
-![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table3.png)
+![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table2.PNG)
+![alt text](https://github.com/OODD-Mozilla/ToolRepository/blob/master/images/Table3.PNG)
 
 ## References
 * To generate a github api token: https://github.com/blog/1509-personal-api-tokens
