@@ -14,7 +14,7 @@ if (process.env.GITHUB_KEY == undefined) { //Make sure token is set
 var token = "token " + process.env.GITHUB_KEY;
 var organization = "OODD-Mozilla";
 var initUntilDate = "18-MAR-2017";
-var sinceDate = "26-APR-2017"
+var sinceDate = "24-APR-2017"
 
 // Require Tools
 var CloneTool = require("../tools/CloneTool.js");
@@ -111,7 +111,7 @@ describe('testToolSuite', function() {
 		describe('#run(folderPath)', function() {
 
 			it('should handle invalid path', function(done) {
-				return InitTool.run("NonexistentPath")
+				return InitTool.run("NonexistentPath", initUntilDate)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -127,10 +127,10 @@ describe('testToolSuite', function() {
 
 			//TODO: decouple from clone tool folder
 			it('should find 6 authors in OODD-Mozilla organization', function(done) {
-				return InitTool.run(folderPath)
+				return InitTool.run(folderPath, initUntilDate)
 					.then(function() {
 						var authors = AuthorUtils.getAuthors(folderPath);
-						assert.equal(authors.length, 6, "Authors file has expected number of authors");
+						assert.equal(authors.length, 2, "Authors file has expected number of authors");
 						done();
 					})
 					.catch(function(e) {
