@@ -10,48 +10,30 @@ function addAuthors(org, token, folderPath, pullSinceDate, callback) {
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
     var newAuthors = [];
 
-    return new Promise(function(resolveDone, rejectDone) {
-        GitHubUtils.getOrgRepos(org, token, function (repos) {
-
-            if(!repos){
-                rejectDone("Error getting repos for organization.");
-                return;
-            }
-
-            // Repo Promises
-            var repoPromises = [];
-            repos.forEach(function (repo) {
-                var repoPromise = new Promise(function(resolveRepo, rejectRepo) {
-                    GitHubUtils.getCommitsUrlFromAllPulls(repo.url, token, pullSinceDate, function (commitsUrls) {
-
-                        // Commit Promises
-                        var commitPromises = [];
-                        commitsUrls.forEach(function (pullCommitsUrl) {
-                            var commitPromise = new Promise(function(resolveCommit, rejectCommit) {
-                                GitHubUtils.getAuthorsFromCommit(pullCommitsUrl, token, function (authors) {
-                                    newAuthors = newAuthors.concat(authors);
-                                    resolveCommit();
-                                });
-                            });
-                            commitPromises.push(commitPromise); 
-                        });
-                        Promise.all(commitPromises).then(resolveRepo).catch(rejectRepo);
-
+    return new Promise(function (resolveDone, rejectDone) {
+        // Org Promises
+        //var orgPromise = new Promise(function (resolveOrg, rejectOrg) {
+        var commitPromises = [];
+        GitHubUtils.getPullsUrlForOrg(org, token, pullSinceDate, function (pullsUrls) {
+            // Commit Promises
+            pullsUrls.forEach(function (pullUrl) {
+                var commitPromise = new Promise(function (resolveCommit, rejectCommit) {
+                    GitHubUtils.getAuthorsFromCommit(pullUrl, token, function (authors) {
+                        newAuthors = newAuthors.concat(authors);
+                        resolveCommit();
                     });
                 });
-                repoPromises.push(repoPromise);
+                commitPromises.push(commitPromise);
             });
             // When all repos have been analyzed, resolve done promise with new authors
-            Promise.all(repoPromises).then(function(){
+            Promise.all(commitPromises).then(function () {
                 var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
                 var diff = _.difference(uniqueNewAuthors, oldAuthors);
                 var allAuthors = oldAuthors.concat(diff);
                 AuthorUtils.saveAuthors(folderPath, allAuthors);
                 resolveDone(diff);
             }).catch(rejectDone);
-
         });
-        
     });
 }
 

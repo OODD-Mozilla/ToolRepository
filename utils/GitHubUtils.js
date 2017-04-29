@@ -2,7 +2,7 @@ var request = require('request');
 var githubUrlRoot = "https://api.github.com";
 
 function getOptions(url, token) {
-    return  {
+    return {
         url: url,
         method: 'GET',
         headers: {
@@ -28,8 +28,8 @@ module.exports = {
     //Returns the list of repos for particular org
     getOrgRepos: function (org, token, callback) {
         var url = githubUrlRoot + '/orgs/' + org + '/repos';
-        sendRequest(url, token, function(response, body){
-            if(response.statusCode != 200) {
+        sendRequest(url, token, function (response, body) {
+            if (response.statusCode != 200) {
                 callback(null);
                 return;
             }
@@ -37,39 +37,30 @@ module.exports = {
         });
     },
 
-    //to be used to all the closed pull requests' URL from specified repo
-    getCommitsUrlFromAllPulls: function (repoUrl, token, pullSinceDate, callback) {
-        var url = repoUrl + '/pulls?state=closed&sort=closed_at&direction=desc';
-        sendRequest(url, token, function(response, body){
+    //to be used to all the closed pull requests' URL from specified organization since the specified date
+    getPullsUrlForOrg: function (org, token, pullSinceDate, callback) {
+        var url = githubUrlRoot + '/orgs/' + org + '/issues?filter=all&state=closed&sort=closed_at&since=' + pullSinceDate;
+        sendRequest(url, token, function (response, body) {
             var obj = JSON.parse(body);
-            var commitsUrlList = [];
+            var pullsUrlList = [];
             for (var i = 0; i < obj.length; i++) {
-                var closedDate = new Date(obj[i].closed_at);
-                var sinceDate = new Date(pullSinceDate);
-                //console.log("Closed: " + closedDate);
-                //console.log("Since: " + since);
-                if (closedDate > sinceDate) {
-                  //  console.log("Closed > Since");
-                    commitsUrlList.push(obj[i].commits_url);
-                } else {
-                    //console.log("Closed <= Since")
-                    break;
+                if (obj[i].pull_request != null) {
+                    pullsUrlList.push(obj[i].pull_request.url);
                 }
             }
-            callback(commitsUrlList);
+            callback(pullsUrlList);
         });
     },
 
-    //Gets authors from commit
-    getAuthorsFromCommit : function(commitUrl, token, callback) {
-        sendRequest(commitUrl, token, function (response, body) {
-            body = JSON.parse(body);
+    //Gets authors from all the commits of given pull
+    getAuthorsFromCommit: function (pullUrl, token, callback) {
+        sendRequest(pullUrl + "/commits", token, function (response, body) {
+            var obj = JSON.parse(body);
             var authors = [];
-            for (var i = 0; i < body.length; i++) {
-                authors.push(body[i].commit.author.name);
+            for (var i = 0; i < obj.length; i++) {
+                authors.push(obj[i].commit.author.name);
             }
             callback(authors);
         });
     }
-
 };
