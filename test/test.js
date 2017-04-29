@@ -14,6 +14,7 @@ if (process.env.GITHUB_KEY == undefined) { //Make sure token is set
 var token = "token " + process.env.GITHUB_KEY;
 var organization = "OODD-Mozilla";
 var initUntilDate = "18-MAR-2017";
+var sinceDate = "26-APR-2017"
 
 // Require Tools
 var CloneTool = require("../tools/CloneTool.js");
@@ -33,20 +34,20 @@ describe('testToolSuite', function() {
 
 		if (mockingOn) {
 			var invalidOrg = nock("https://api.github.com").persist()
-			.get("/orgs/invalidOrg/repos")
-			.reply(404, JSON.stringify(data.invalidRequest));
+				.get("/orgs/invalidOrg/repos")
+				.reply(404, JSON.stringify(data.invalidRequest));
 
 			var validRepo = nock("https://api.github.com").persist()
-			.get("/orgs/OODD-Mozilla/repos")
-			.reply(200, JSON.stringify(data.getRepos));
+				.get("/orgs/OODD-Mozilla/repos")
+				.reply(200, JSON.stringify(data.getRepos));
 
 			var getPullsTestRepo = nock("https://api.github.com").persist()
-				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=closed")
+				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=closed&sort=closed_at&direction=desc")
 				.reply(200, JSON.stringify(data.getPullRequests_TestRepo));
 
 			//TODO
 			var getPullsToolRepository = nock("https://api.github.com").persist()
-				.get("/repos/OODD-Mozilla/ToolRepository/pulls?state=closed")
+				.get("/repos/OODD-Mozilla/ToolRepository/pulls?state=closed&sort=closed_at&direction=desc")
 				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
 
 			// get all commits per pull request
@@ -59,7 +60,7 @@ describe('testToolSuite', function() {
 		describe('#run(org, token, folderPath)', function() {
 
 			it('should handle invalid organization', function(done) {
-				
+
 				return CloneTool.run("invalidOrg", token, folderPath)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
@@ -161,13 +162,13 @@ describe('testToolSuite', function() {
 								done();
 							});
 						})
-						.catch(function(e){	
+						.catch(function(e) {
 							setTimeout(function() {
-							assert.isOk(false, "Authors not initialized.");
-							done();
-							this.skip();
+								assert.isOk(false, "Authors not initialized.");
+								done();
+								this.skip();
+							});
 						});
-					});
 				})
 				.catch(this.skip);
 		});
@@ -175,7 +176,7 @@ describe('testToolSuite', function() {
 		describe('#run(org, token, localReposPath)', function() {
 
 			it('should handle invalid organization', function(done) {
-				return PullRequestTool.run("invalidOrg", token)
+				return PullRequestTool.run("invalidOrg", token, folderPath, sinceDate)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -191,7 +192,7 @@ describe('testToolSuite', function() {
 			});
 
 			it('should handle invalid token', function(done) {
-				return PullRequestTool.run("OODD-Mozilla", "invalidKey")
+				return PullRequestTool.run("OODD-Mozilla", "invalidKey", folderPath, sinceDate)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -208,7 +209,7 @@ describe('testToolSuite', function() {
 			it('should find 1 new author from new pull request', function(done) {
 				var authors = AuthorUtils.getAuthors(folderPath);
 				assert.equal(authors.length, 2, "Authors file should have two authors initially.");
-				return PullRequestTool.run(organization, token, folderPath)
+				return PullRequestTool.run(organization, token, folderPath, sinceDate)
 					.then(function(newAuthors) {
 						// Have to wrap in set timeout, otherwise get weird promise interference
 						setTimeout(function() {
@@ -225,6 +226,7 @@ describe('testToolSuite', function() {
 						});
 					});
 			});
+
 
 		});
 
