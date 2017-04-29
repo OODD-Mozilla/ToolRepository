@@ -41,27 +41,12 @@ describe('testToolSuite', function() {
 				.get("/orgs/OODD-Mozilla/repos")
 				.reply(200, JSON.stringify(data.getRepos));
 
-			var getPullsTestRepo = nock("https://api.github.com").persist()
-				.get("/repos/OODD-Mozilla/TestRepo/pulls?state=closed&sort=closed_at&direction=desc")
-				.reply(200, JSON.stringify(data.getPullRequests_TestRepo));
-
-			
-			var getPullsToolRepository = nock("https://api.github.com").persist()
-				.get("/repos/OODD-Mozilla/ToolRepository/pulls?state=closed&sort=closed_at&direction=desc")
-				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
-
-			// get all commits per pull request
-			var commitsOnPull = nock("https://api.github.com").persist()
-				.get("/repos/OODD-Mozilla/TestRepo/pulls/1/commits")
-				.reply(200, JSON.stringify(data.getCommits));
-			//get pulls from issues
-			//"https://api.github.com/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017",
 
 			var getFromIssues = nock("https://api.github.com").persist()
 				.get("/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
 				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
 
-			var getFromIssues = nock("https://api.github.com").persist()
+			var getIssuesInvalidOrg = nock("https://api.github.com").persist()
 				.get("/orgs/invalidOrg/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
 				.reply(200, JSON.stringify(data.invalidRequest));
 
@@ -138,7 +123,7 @@ describe('testToolSuite', function() {
 			});
 
 			//TODO: decouple from clone tool folder
-			it('should find 6 authors in OODD-Mozilla organization', function(done) {
+			it('should find 2 authors in OODD-Mozilla organization', function(done) {
 				return InitTool.run(folderPath, initUntilDate)
 					.then(function() {
 						var authors = AuthorUtils.getAuthors(folderPath);
