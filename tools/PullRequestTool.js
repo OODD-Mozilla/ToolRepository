@@ -7,15 +7,14 @@ var _ = require('underscore');
 
 /********** PUBLIC ***********/
 function addAuthors(org, token, folderPath, pullSinceDate, callback) {
+    //Get authors from local JSON file for comparison
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
     var newAuthors = [];
 
     return new Promise(function (resolveDone, rejectDone) {
-        // Org Promises
-        //var orgPromise = new Promise(function (resolveOrg, rejectOrg) {
+        //Commit Promises
         var commitPromises = [];
         GitHubUtils.getPullsUrlForOrg(org, token, pullSinceDate, function (pullsUrls) {
-            // Commit Promises
             pullsUrls.forEach(function (pullUrl) {
                 var commitPromise = new Promise(function (resolveCommit, rejectCommit) {
                     GitHubUtils.getAuthorsFromPull(pullUrl, token, function (authors) {
@@ -25,7 +24,7 @@ function addAuthors(org, token, folderPath, pullSinceDate, callback) {
                 });
                 commitPromises.push(commitPromise);
             });
-            // When all repos have been analyzed, resolve done promise with new authors
+            // When all commits have been analyzed, resolve done promise with new authors
             Promise.all(commitPromises).then(function () {
                 var uniqueNewAuthors = AuthorUtils.uniqueArray(newAuthors);
                 var diff = _.difference(uniqueNewAuthors, oldAuthors);

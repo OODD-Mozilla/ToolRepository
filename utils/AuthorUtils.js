@@ -1,6 +1,7 @@
 var jsonfile = require('jsonfile');
 var authorsFile = '/authors.json';
 
+//fetches all the authors present in JSON file
 function getAuthors(folderPath) {
 	try {
 		var authorsFromFile = jsonfile.readFileSync(folderPath + authorsFile);
@@ -15,6 +16,7 @@ function getAuthors(folderPath) {
 	}
 }
 
+//Writes the authors to local JSON file
 function saveAuthors(folderPath, authors) {
 	jsonfile.writeFileSync(folderPath + authorsFile, authors);
 }

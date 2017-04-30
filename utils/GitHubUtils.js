@@ -1,6 +1,9 @@
 var request = require('request');
 var githubUrlRoot = "https://api.github.com";
 
+//helper function of sendRequest.
+//Sets options like url and token which is used
+//during request.
 function getOptions(url, token) {
     return {
         url: url,
@@ -13,6 +16,7 @@ function getOptions(url, token) {
     };
 }
 
+//helper function to send request
 function sendRequest(url, token, callback) {
     request(getOptions(url, token), function (error, response, body) {
         if (error) {
@@ -37,7 +41,7 @@ module.exports = {
         });
     },
 
-    //to be used to all the closed pull requests' URL from specified organization since the specified date
+    //gets all the closed pull requests' URL from specified organization since the specified date
     getPullsUrlForOrg: function (org, token, pullSinceDate, callback) {
         var url = githubUrlRoot + '/orgs/' + org + '/issues?filter=all&state=closed&sort=closed_at&since=' + pullSinceDate;
         sendRequest(url, token, function (response, body) {
