@@ -1,6 +1,6 @@
 
 ## Project Description
-Part of Mozilla[dev-servp] Open Source Project with these [specifications](https://github.com/servo/servo/wiki/Report-new-contributors-project)
+Part of Mozilla[dev-servo] Open Source Project with these [specifications](https://github.com/servo/servo/wiki/Report-new-contributors-project)
 
 ## Wikipedia Documentation 
 Find a detailed [wikipedia](http://wiki.expertiza.ncsu.edu/index.php/M1705) page on the project 
@@ -36,6 +36,7 @@ Location: `tools/PullRequestTool.js`
   * folderPath - the path to the folder that has the repositories and authors
   * token - the GITHUB token, required to use the GitHub API
   * organization - the organization whose repositories will be cloned
+  * sinceDate - date to analyze pull requests since, in form DD-MMM-YYYY, e.g. 20-APR-2017
   * Returns a promise that is resolved with new authors, or rejected if something goes wrong
 
 ## Other Files
