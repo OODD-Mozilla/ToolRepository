@@ -13,7 +13,7 @@ if (process.env.GITHUB_KEY == undefined) { //Make sure token is set
 }
 var token = "token " + process.env.GITHUB_KEY;
 var organization = "OODD-Mozilla";
-var initUntilDate = "18-MAR-2017";
+var initUntilDate = "19-MAR-2017";
 var sinceDate = "24-APR-2017"
 
 // Require Tools
@@ -41,16 +41,13 @@ describe('testToolSuite', function() {
 				.get("/orgs/OODD-Mozilla/repos")
 				.reply(200, JSON.stringify(data.getRepos));
 
-
 			var getFromIssues = nock("https://api.github.com").persist()
-				.get("/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
+				.get("/orgs/OODD-Mozilla/issues?filter=all&state=closed&sort=closed_at&since=" + sinceDate)
 				.reply(200, JSON.stringify(data.getPullRequests_ToolRepository));
 
 			var getIssuesInvalidOrg = nock("https://api.github.com").persist()
-				.get("/orgs/invalidOrg/issues?filter=all&state=closed&sort=closed_at&since=24-APR-2017")
+				.get("/orgs/invalidOrg/issues?filter=all&state=closed&sort=closed_at&since=" + sinceDate)
 				.reply(200, JSON.stringify(data.invalidRequest));
-
-
 		}
 
 		var folderPath = mypath + "/clonetest";
@@ -189,13 +186,11 @@ describe('testToolSuite', function() {
 			});
 
 			it('should handle invalid token', function(done) {
-				return PullRequestTool.run("OODD-Mozilla", "invalidKey", folderPath, sinceDate)
+				return PullRequestTool.run(organization, "invalidtoken", folderPath, sinceDate)
 					.then(function() {
 						// Have to wrap in set timeout, otherwise get weird promise interference
-						setTimeout(function() {
-							assert.isOk(false, "The PullRequestTool should not have accepted the invalid gitToken");
-							done();
-						});
+						assert.isOk(false, "The PullRequestTool should not have accepted the invalid gitToken");
+						done();
 					})
 					.catch(function(e) {
 						assert.isOk(true, "The PullRequestTool rejected the bad git token, as expected.");

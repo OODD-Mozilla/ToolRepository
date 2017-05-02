@@ -46,6 +46,10 @@ module.exports = {
         var url = githubUrlRoot + '/orgs/' + org + '/issues?filter=all&state=closed&sort=closed_at&since=' + pullSinceDate;
         sendRequest(url, token, function (response, body) {
             var obj = JSON.parse(body);
+            if ( (response.statusCode == 404) || (obj.message == "Not Found")) { //invalid token or org
+                callback(null);
+                return;
+            }
             var pullsUrlList = [];
             for (var i = 0; i < obj.length; i++) {
                 if (obj[i].pull_request != null) {

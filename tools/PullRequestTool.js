@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 
 /********** PUBLIC ***********/
-function addAuthors(org, token, folderPath, pullSinceDate, callback) {
+function addAuthors(org, token, folderPath, pullSinceDate) {
     //Get authors from local JSON file for comparison
     var oldAuthors = AuthorUtils.getAuthors(folderPath);
     var newAuthors = [];
@@ -15,6 +15,10 @@ function addAuthors(org, token, folderPath, pullSinceDate, callback) {
         //Commit Promises
         var commitPromises = [];
         GitHubUtils.getPullsUrlForOrg(org, token, pullSinceDate, function (pullsUrls) {
+            if(!pullsUrls) {
+                rejectDone();
+                return;
+            }
             pullsUrls.forEach(function (pullUrl) {
                 var commitPromise = new Promise(function (resolveCommit, rejectCommit) {
                     GitHubUtils.getAuthorsFromPull(pullUrl, token, function (authors) {
